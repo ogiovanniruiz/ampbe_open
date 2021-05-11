@@ -147,7 +147,7 @@ const generateTargetResults = async(activity) => {
                             'else': '$$REMOVE'
                         }
                     },
-                    numResContacted: 0,
+                    //numResContacted: 0,
                     date: { $toDate: Date.now() },
                  }},
 
@@ -210,7 +210,7 @@ const generateTargetResults = async(activity) => {
                                 'else': '$$REMOVE'
                             }
                         },
-                        numResContacted: 0,
+                        //numResContacted: 0,
                         date: { $toDate: Date.now() },
                 }},
             ]
@@ -270,7 +270,7 @@ const generateTargetResults = async(activity) => {
                                 'else': '$$REMOVE'
                             }
                         },
-                        numResContacted: 0,
+                        //numResContacted: 0,
                         date: { $toDate: Date.now() },
                 }},
             ]
