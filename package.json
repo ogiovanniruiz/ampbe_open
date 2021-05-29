@@ -5,7 +5,6 @@
   "scripts": {
     "start": "node --max-old-space-size=10240 ./bin/www",
     "prodServer": "export NODE_ENV=production && node --max-old-space-size=10240 ./bin/www",
-    "devServer": "export NODE_ENV=devServer && node --max-old-space-size=10240 ./bin/www",
     "devstart": "nodemon --max-old-space-size=10240 ./bin/www"
   },
   "dependencies": {

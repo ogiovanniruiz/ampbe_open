@@ -37,8 +37,6 @@ const getCOIReport = async(data) => {
 
         }else if (data.mode === 'user'){
 
-            
-
             var org = await Organization.findById(data.orgID)
             for (var i = 0; i < org.userIDs.length; i++){
                 var query = {'properties.userID': org.userIDs[i]}

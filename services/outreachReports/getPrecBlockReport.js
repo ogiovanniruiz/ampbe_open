@@ -220,6 +220,7 @@ const getPrecBlockReport = async(detail) => {
                 }
             }
         ];
+
         var report = await OutreachReport.aggregate(agg).allowDiskUse(true);
         return report;
     } catch(e){

@@ -43,11 +43,24 @@ const createActivity = async(details) => {
             }else{
                 await Membership.aggregate(query['agg']).allowDiskUse(true)
             }
-
         }
 
         if(newActivity.activityType === "Petition"){
             return newActivity.save()
+        }
+
+        if(newActivity.activityType === "Canvass"){
+            var query = await generateTargetResults.generateTargetResults(newActivity)
+
+            query['agg'].push({'$merge': { into: "canvasshouseholdrecords", on: "_id", whenNotMatched: "insert" }})
+
+            if(query['idByHousehold'] === 'HOUSEHOLD'){
+                await HouseHold.aggregate(query['agg']).allowDiskUse(true)
+            }else if (query['idByHousehold'] === 'INDIVIDUAL'){
+                await People.aggregate(query['agg']).allowDiskUse(true)
+            }else{
+                await Membership.aggregate(query['agg']).allowDiskUse(true)
+            }
         }
 
         /*if(newActivity.activityType === 'Hotline'){
