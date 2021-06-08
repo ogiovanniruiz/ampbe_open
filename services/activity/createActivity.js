@@ -63,14 +63,6 @@ const createActivity = async(details) => {
             }
         }
 
-        /*if(newActivity.activityType === 'Hotline'){
-           console.log(newActivity.hotlineMetaData.mainPhoneNumber)
-
-           var callPool = await CallPool.findOne({number: newActivity.hotlineMetaData.mainPhoneNumber})
-
-           callPool.hotlineUse = true
-           callPool.save()
-        }*/
 
         newActivity.idByHousehold = query['idByHousehold'];
 

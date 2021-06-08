@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node --max-old-space-size=10240 ./bin/www",
     "prodServer": "export NODE_ENV=production && node --max-old-space-size=10240 ./bin/www",
+    "devServer": "export NODE_ENV=devServer && node --max-old-space-size=10240 ./bin/www",
     "devstart": "nodemon --max-old-space-size=10240 ./bin/www"
   },
   "dependencies": {
@@ -18,8 +19,8 @@
     "geocodio-library-node": "^1.1.0",
     "glob": "^7.1.6",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.7.7",
-    "mongoose-auto-increment": "^5.0.1",
+    "mongoose": "5.12.12",
+    "mongoose-auto-increment": "5.0.1",
     "morgan": "^1.9.1",
     "multer": "^1.4.2",
     "node-geocoder": "^3.25.0",

@@ -28,8 +28,6 @@ const getEstimate = async(estimate) => {
             } else{
                 filter = await convertQueriesMembership.convertQueriesMembership(queries)
             }
-
-            console.log(filter)
         }
 
         var districtType = {};

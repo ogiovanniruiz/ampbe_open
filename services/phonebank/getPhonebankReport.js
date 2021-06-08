@@ -233,8 +233,6 @@ const getPhonebankReport = async(detail) => {
 
         ];
 
-        console.log(JSON.stringify(agg, null, 2))
-
         var report = await PhonebankContactHistory.aggregate(agg).allowDiskUse(true);
 
         return {activities: report, script: script};

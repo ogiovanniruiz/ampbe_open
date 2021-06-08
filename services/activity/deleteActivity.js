@@ -3,6 +3,7 @@ var PhonebankContactHistory = require('../../models/activities/phonebank/phoneba
 var TextbankContactHistory = require('../../models/activities/textbank/textbankContactHistory')
 var PhonebankHouseHoldRecord = require('../../models/activities/phonebank/phonebankHouseHoldRecord')
 var TextbankHouseHoldRecord = require('../../models/activities/textbank/textbankHouseholdRecord')
+var CanvassHouseHoldRecord = require('../../models/activities/canvass/canvassHouseHoldRecord')
 
 const deleteActivity = async(details) => {
     try { 
@@ -16,6 +17,12 @@ const deleteActivity = async(details) => {
 
             await PhonebankContactHistory.deleteMany({activityID: details.activityID})
             await PhonebankHouseHoldRecord.deleteMany({activityID: details.activityID})
+        }
+
+        if(details.activityType === 'Canvass'){
+
+            //await CanvassContactHistory.deleteMany({activityID: details.activityID})
+            await CanvassHouseHoldRecord.deleteMany({activityID: details.activityID})
         }
 
         return await Activity.deleteOne({_id: details.activityID})

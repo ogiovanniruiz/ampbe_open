@@ -53,9 +53,6 @@ const extractScriptResponses = async(queries, outReachReport) =>{
             
 
             }
-
-            console.log(queries.rules[i].personIDs)
-
         }
 
 
