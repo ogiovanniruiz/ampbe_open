@@ -5,7 +5,7 @@ var convertQueriesHousehold = require('./convertQueriesHousehold')
 var convertQueriesIndividual = require('./convertQueriesIndividual')
 var convertQueriesMembership = require('./convertQueriesMembership')
 var ExtractScriptResponses = require('./extractScriptResponses')
-var OutReachReport = require('../../models/campaigns/outreachReport')
+
 var Membership = require('../../models/organizations/membership')
 
 const getEstimate = async(estimate) => {
@@ -13,13 +13,9 @@ const getEstimate = async(estimate) => {
         
         var campaign = await Campaign.findOne({campaignID: estimate.campaignID})
 
-        var outReachReport = await OutReachReport.find({campaignID: estimate.campaignID, orgID: estimate.orgID})
-
         var filter = {}
         if(estimate.queries){
-            var queries = await ExtractScriptResponses.extractScriptResponses(estimate.queries, outReachReport)
-
-            
+            var queries = await ExtractScriptResponses.extractScriptResponses(estimate.queries, estimate.campaignID, estimate.orgID)
 
             if(estimate.idByHousehold === 'HOUSEHOLD'){
                 filter = await convertQueriesHousehold.convertQueriesHousehold(queries)

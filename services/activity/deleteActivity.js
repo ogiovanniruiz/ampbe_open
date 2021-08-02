@@ -4,6 +4,7 @@ var TextbankContactHistory = require('../../models/activities/textbank/textbankC
 var PhonebankHouseHoldRecord = require('../../models/activities/phonebank/phonebankHouseHoldRecord')
 var TextbankHouseHoldRecord = require('../../models/activities/textbank/textbankHouseholdRecord')
 var CanvassHouseHoldRecord = require('../../models/activities/canvass/canvassHouseHoldRecord')
+var CanvassContactHistory = require('../../models/activities/canvass/canvassContactHistory')
 
 const deleteActivity = async(details) => {
     try { 
@@ -20,8 +21,7 @@ const deleteActivity = async(details) => {
         }
 
         if(details.activityType === 'Canvass'){
-
-            //await CanvassContactHistory.deleteMany({activityID: details.activityID})
+            await CanvassContactHistory.deleteMany({activityID: details.activityID})
             await CanvassHouseHoldRecord.deleteMany({activityID: details.activityID})
         }
 

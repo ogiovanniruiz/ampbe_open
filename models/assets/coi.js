@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var User = require('../users/user')
 
 var COISchema = new Schema(
     {
@@ -7,6 +8,7 @@ var COISchema = new Schema(
       properties: { name: {type: String},
                     userID: {type: String},
                     orgID: {type: String},
+                    user: User.schema,
                     date: {type: Date, default: Date.now},
                     questions: [{question: {type: String}, 
                                  answer: {type: String}}],

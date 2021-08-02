@@ -3,15 +3,25 @@ var TextbankContactHistory = require('../../models/activities/textbank/textbankC
 const getTextbankContactHistory = async(data) => {
     try { 
 
-        var textbankContactHistory = await TextbankContactHistory.find({activityID: data.activity._id})
-        var residentsSent = textbankContactHistory.map(x =>{return x['personID']});
-
         if(data.orgLevel === "ADMINISTRATOR"){
-            var residentsResponded = textbankContactHistory.filter(x => {return (x['textReceived']['status'] && !x['complete'])});
-            var residentsRespondedIDS = textbankContactHistory.filter(x => {return (x['textReceived']['status'] && !x['complete'])}).map(x =>{return x['personID']});
+
+            var textbankContactHistory = await TextbankContactHistory.find({activityID: data.activity._id, complete: false})
+
+            console.log(textbankContactHistory)
+            var residentsSent = textbankContactHistory.map(x =>{return x['personID']});
+
+            var residentsResponded = textbankContactHistory.filter(x => {return (x['textReceived']['status'])});
+            var residentsRespondedIDS = textbankContactHistory.filter(x => {return (x['textReceived']['status'])}).map(x =>{return x['personID']});
+
+            console.log("Admin.")
         } else {
-            var residentsResponded = textbankContactHistory.filter(x => {return (x['textReceived']['status'] && !x['complete'] && x['userID'] === data.userID)});
-            var residentsRespondedIDS = textbankContactHistory.filter(x => {return (x['textReceived']['status'] && !x['complete'] && x['userID'] === data.userID)}).map(x =>{return x['personID']});
+
+            var textbankContactHistory = await TextbankContactHistory.find({activityID: data.activity._id, userID: data.userID, complete: false})
+            var residentsSent = textbankContactHistory.map(x =>{return x['personID']});
+
+            var residentsResponded = textbankContactHistory.filter(x => {return (x['textReceived']['status'])});
+            var residentsRespondedIDS = textbankContactHistory.filter(x => {return (x['textReceived']['status'])}).map(x =>{return x['personID']});
+            console.log("Not Admin.")
         }
 
         return {residentsSent: residentsSent, residentsResponded: residentsResponded, residentsRespondedIDS: residentsRespondedIDS}

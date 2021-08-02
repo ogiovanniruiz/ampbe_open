@@ -3,7 +3,22 @@ var Canvasshouseholdrecord = require('../../models/activities/canvass/canvassHou
 
 const getCanvassHouseholds = async(details) => {
     try { 
-        return await Canvasshouseholdrecord.find({activityID: details.activityID}).limit(100)
+
+        return await Canvasshouseholdrecord.aggregate([
+            {$match: {activityID: details.activityID}},
+            
+            {$group: {_id: {
+                            location:'$houseHold.location',
+                            },
+                        houseHold: {$first: '$houseHold'},
+                        records: {$push: '$$ROOT'},
+                        complete: {$push: '$complete'}
+
+                        }
+            }
+        
+        ]).allowDiskUse(true)
+
     } catch(e){
         throw new Error(e.message)
     }

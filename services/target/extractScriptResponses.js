@@ -1,7 +1,8 @@
 var Blockgroups = require('../../models/targets/blockgroup')
 var Precincts = require('../../models/targets/precinct')
+var OutReachReport = require('../../models/campaigns/outreachReport')
 
-const extractScriptResponses = async(queries, outReachReport) =>{
+const extractScriptResponses = async(queries, campaignID, orgID) =>{
 
     if(queries.rules.length < 1){
         return queries
@@ -11,6 +12,8 @@ const extractScriptResponses = async(queries, outReachReport) =>{
         queries.rules[i].personIDs = [];
 
         if(queries.rules[i].field === 'scripts' && queries.rules[i].value){
+            var outReachReport = await OutReachReport.find({campaignID: campaignID, orgID: orgID, scriptResponse: {$exists: true}})
+            
             for(var k = 0; k < queries.rules[i].value.length; k++){
 
                 var scriptID = queries.rules[i].value[k]._id;
@@ -36,6 +39,7 @@ const extractScriptResponses = async(queries, outReachReport) =>{
         }
 
         if(queries.rules[i].field === 'nonResponseSets' && queries.rules[i].value){
+            var outReachReport = await OutReachReport.find({campaignID: campaignID, orgID: orgID, nonResponse: {$exists: true}})
             for(var k = 0; k < queries.rules[i].value.length; k++){
                 var nonResponseSetID = queries.rules[i].value[k]._id;
                 var nonResponseType = queries.rules[i].value[k].nonResponseType;
@@ -50,8 +54,6 @@ const extractScriptResponses = async(queries, outReachReport) =>{
                 for(var j = 0; j < targetOutReachEntries.length; j++ ){
                     queries.rules[i].personIDs.push(targetOutReachEntries[j].personID)
                  }
-            
-
             }
         }
 

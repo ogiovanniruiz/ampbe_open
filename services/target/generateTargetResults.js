@@ -29,12 +29,12 @@ const generateTargetResults = async(activity) => {
         }
 
         if(activity.activityType === 'Texting' || activity.activityType === 'Phonebank' ){
-            var outReachReport = await OutReachReport.find({campaignID: activity.campaignID, orgID: activity.orgIDs})
+            var outReachReport = await OutReachReport.find({campaignID: activity.campaignID, orgID: activity.orgIDs, $or: [{'nonResponse.nonResponseType': 'INVALIDPHONE'}, {'nonResponse.nonResponseType': 'DNC'}]})
 
             for(var i = 0; i < outReachReport.length; i++){
-                if(outReachReport[i].nonResponse && (outReachReport[i].nonResponse.nonResponseType === 'INVALIDPHONE' || outReachReport[i].nonResponse.nonResponseType === 'DNC')){
+                //if(outReachReport[i].nonResponse && (outReachReport[i].nonResponse.nonResponseType === 'INVALIDPHONE' || outReachReport[i].nonResponse.nonResponseType === 'DNC')){
                     excludedObjects.push({$ne: ["$$residents._id", outReachReport[i].personID]})
-                }
+                //}
             }
         }
 
@@ -43,7 +43,7 @@ const generateTargetResults = async(activity) => {
         // Build filter
         if(target.properties.queries){
 
-            var queries = await ExtractScriptResponses.extractScriptResponses(target.properties.queries, outReachReport)
+            var queries = await ExtractScriptResponses.extractScriptResponses(target.properties.queries, activity.campaignID, activity.orgID)
             
             if(target.properties.idByHousehold === 'HOUSEHOLD'){
                 filter = await convertQueriesHousehold.convertQueriesHousehold(queries)

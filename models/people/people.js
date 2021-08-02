@@ -13,8 +13,6 @@ var PeopleSchema = new Schema(
       personID: {type: String},
       name: Name.schema,
       phones: [Phone.schema],
-      mobile: [{type: String}],
-      landline: [{type: String}],
       emails: [{type: String}],
       pav: {type: Boolean},
       dob: {type: Date},
@@ -26,7 +24,6 @@ var PeopleSchema = new Schema(
       generalPropensity: {type: Number},
       primaryPropensity: {type: Number},
       creationInfo: CreationInfo.schema,
-      doNotContact: {type: Boolean},
     },
 
     address:{

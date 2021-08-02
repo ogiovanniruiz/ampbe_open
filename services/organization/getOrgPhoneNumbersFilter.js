@@ -6,7 +6,7 @@ const getOrgPhoneNumbersFilter = async(data) => {
         const agg = [
             {
                 '$match': {
-                    'campaignID': data.campaignID,
+                    //'campaignID': data.campaignID,
                     'active': true
                 }
             },// REMOVED BECAUSE WE WANT TO PREVENT AN ORG FROM USING SAME NUM ACCROSS MULTIPLE CAMPAIGNS 8/27/20
@@ -30,6 +30,7 @@ const getOrgPhoneNumbersFilter = async(data) => {
             }
         ];
         var numbers = await Activity.aggregate(agg);
+        console.log(numbers)
         return numbers;
         
     } catch(e){

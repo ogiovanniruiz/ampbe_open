@@ -14,10 +14,6 @@ const getBlockgroupsByBounds= async(detail) => {
             geoid = { $in: detail.blockgroupIDS }
         }
 
-        console.log(detail)
-
-        console.log("GETTING THEM")
-
         return await Blockgroups.find({ "properties.geoid": geoid ? geoid : { $exists: true },
                                          geometry: {$geoIntersects: { $geometry: {type: "Polygon" , coordinates: [arrayCoords] }}}
                                        });

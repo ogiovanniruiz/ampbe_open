@@ -1,34 +1,20 @@
-var Organization = require('../../models/organizations/organization')
 var OutreachReport = require('../../models/campaigns/outreachReport')
-var User = require('../../models/users/user')
-var RivVoterfile = require('../../models/people/rivvoterfile')
-var SbVoterfile = require('../../models/people/sbvoterfile')
-var mongoose = require('mongoose');
-
-const ObjectId = mongoose.Types.ObjectId;
+var People = require('../../models/people/people')
 
 const downloadOrgContactHistory = async(detail) => {
     try { 
 
-        var orgReport = await OutreachReport.find({orgID: detail.orgID})
+        var orgReport = await OutreachReport.aggregate([{$match: {orgID: detail.orgID}}])
 
-        /*
         for(var i = 0; i < orgReport.length; i++){
-            var user = await User.findById(orgReport[i].contactedBy)
-            orgReport[i].name = user.name
-            
-            if(!orgReport[i].affidavit){
-                var voter = await RivVoterfile.findById(orgReport[i].personID)
+            if(!orgReport[i].affidavit || !orgReport[i].person){
+                var voter = await People.findOne({'resident.personID': orgReport[i].personID})
                 if(voter){
-                    console.log(voter)
+                    orgReport[i].person = voter
                     
-                }else{
-                    var voter = await SbVoterfile.findById(orgReport[i].personID)
-                    console.log(voter)
-                    //orgReport[i].affidavit = voter
                 }
             }
-        }*/
+        }
 
         return orgReport
 

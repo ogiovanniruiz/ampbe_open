@@ -26,7 +26,7 @@ var HouseHoldSchema = new Schema(
     blockgroupID: {type: String},
     districts: HHDistricts.schema,
     precinctID: {type: String}
-  }
+  },{ collection : 'households2021' }
 );
 
 //Export model

@@ -18,10 +18,6 @@ const submitPhoneScriptResponse = async(details) => {
         pbContactHistory[0].complete = true;
         pbContactHistory[0].save();
 
-
-        //Question here about the entry???
-
-
         const { _id, ...pbContactHistoryEntry } = pbContactHistory[0]._doc;
         pbContactHistoryEntry.activityType = await details.activity.activityType;
         pbContactHistoryEntry.scriptID = await details.activity.scriptID;

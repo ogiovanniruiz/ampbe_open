@@ -1,11 +1,17 @@
 var COI = require('../../models/assets/coi')
 
 var Blockgroup = require('../../models/targets/blockgroup')
+var User = require('../../models/users/user')
 
 const createCOI = async(coiDetail) => {
-    try { 
+    try {
+        
+        coiDetail.properties.userID
+        var user = await User.findById(coiDetail.properties.userID)
 
+        coiDetail.properties.user = user
         var newCOI = new COI(coiDetail)
+        
         var bgs = await Blockgroup.find({geometry: {$geoIntersects: { $geometry: newCOI.geometry}}})
 
         var geoids = []
