@@ -33,6 +33,7 @@ const extractScriptResponses = async(queries, campaignID, orgID) =>{
                 
                 for(var j = 0; j < targetOutReachEntries.length; j++ ){
                     queries.rules[i].personIDs.push(targetOutReachEntries[j].personID)
+                    console.log(targetOutReachEntries[j].personID)
                 }
 
             }

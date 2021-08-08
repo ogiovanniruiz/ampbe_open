@@ -59,10 +59,6 @@ const sendInitText = async(detail) => {
 
         if(detail.tbContactRecord.idBy === 'MEMBERSHIP'){
             person = await Membership.findOne({'resident.personID': detail.resident.personID});
-
-            if(person){
-                console.log("Person Found")
-            }
         }else{
             person = await People.findOne({'resident.personID': detail.resident.personID});
         }

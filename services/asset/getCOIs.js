@@ -4,6 +4,7 @@ var Organization = require('../../models/organizations/organization')
 
 const getCOIs = async(coiDetail) => {
     try { 
+
         var campaign = await Campaign.findOne({campaignID: coiDetail.campaignID})
 
         var features = []
@@ -13,7 +14,6 @@ const getCOIs = async(coiDetail) => {
             var org = await Organization.findById(campaign.orgIDs[i])
             features.push({orgID: campaign.orgIDs[i], cois: cois, orgName: org.name})
         }
-
 
         return features
     } catch(e){

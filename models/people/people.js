@@ -45,7 +45,7 @@ var PeopleSchema = new Schema(
     blockgroupID: {type: String},
     districts: HHDistricts.schema,
     precinctID: {type: String}
-  },{ collection : 'people' }
+  },{ collection : 'people2021' }
 );
 
 //Export model

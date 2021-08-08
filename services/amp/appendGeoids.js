@@ -5,11 +5,11 @@ const appendGeoids = async() => {
     try { 
         console.log("Starting to Append Geoids...")
 
-        var batch = false
+        var batch = true
 
         if(!batch){
                     
-            var houseHolds = await HouseHold.aggregate([{$match: {'blockgroupID': { $exists: false }, 'county.name': 'RIVERSIDE'}}]);
+            var houseHolds = await HouseHold.aggregate([{$match: {'blockgroupID': { $exists: false }}}]);
             for(var i = 0; i < houseHolds.length; i++){
 
 
@@ -19,11 +19,9 @@ const appendGeoids = async() => {
                     }
                 }});
 
-
-
                 if(blockgroup){
                     console.log(blockgroup.properties.geoid)
-                    var updated = await HouseHold.update(
+                    var updated = await HouseHold.updateOne(
                         { _id: houseHolds[i]._id },
                         { 'blockgroupID': blockgroup.properties.geoid },
                         //{ upsert: false, multi: true,}
@@ -44,7 +42,6 @@ const appendGeoids = async() => {
         for(var i = 0; i < blockgroups.length; i++){
             console.log(blockgroups[i].properties.geoid)
             console.log(i)
-
 
             const agg2 = [
                 {
@@ -73,7 +70,7 @@ const appendGeoids = async() => {
             var saveBlockgroupID = await HouseHold.aggregate(agg2);
 
             if(saveBlockgroupID.length) {
-                var updated = await HouseHold.update(
+                var updated = await HouseHold.updateMany(
                     { _id: {$in: saveBlockgroupID[0].records} },
                     { 'blockgroupID': blockgroups[i].properties.geoid },
                     { upsert: false, multi: true,}

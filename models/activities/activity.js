@@ -16,7 +16,7 @@ var ActivitySchema = new Schema(
     nonResponseSetID: {type: String},
     scriptID: {type: String},
     textMetaData: TextMetaData.schema, 
-    hotlineMetaData: HotlineMetaData.schema,
+    //hotlineMetaData: HotlineMetaData.schema,
     passes: {type: Number, default: 0},
     idByHousehold: {type: String, enum :[ "HOUSEHOLD", "INDIVIDUAL" , "MEMBERSHIP"]},
   }
