@@ -21,7 +21,6 @@ const call = async(call) => {
         }
 
         newPhoneContactHistory.person = person;
-
         newPhoneContactHistory.save();
 
         var twiml = new VoiceResponse();

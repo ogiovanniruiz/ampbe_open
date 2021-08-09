@@ -6,7 +6,7 @@ var lockHouseHold = require('../phonebank/lockHouseHold')
 const submitPhoneNonResponse = async(details) => {
     try {
 
-        var pbContactHistory = await PhonebankContactHistory.find({'person.resident.personID': details.personID, 
+        var pbContactHistory = await PhonebankContactHistory.find({personID: details.personID, 
                                                                       activityID: details.activity._id,
                                                                       userID: details.user._id,
                                                                       pass: details.activity.passes

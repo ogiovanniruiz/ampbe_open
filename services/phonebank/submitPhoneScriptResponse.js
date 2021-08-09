@@ -7,7 +7,7 @@ var _ = require ('underscore')
 const submitPhoneScriptResponse = async(details) => {
     try {
 
-        var pbContactHistory = await PhonebankContactHistory.find({'person.resident.personID': details.personID,
+        var pbContactHistory = await PhonebankContactHistory.find({personID: details.personID,
                                                                    activityID: details.activity._id, 
                                                                    userID: details.user._id,
                                                                    status: {$exists: true},
