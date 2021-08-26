@@ -38,6 +38,7 @@ const sendInitText = async(detail) => {
                 body: detail.tbContactRecord.initTextMsg, 
                 from: detail.tbContactRecord.userPhonenum,
                 to: '+1' + phonenumber,
+                //mediaUrl: 'https://demo.twilio.com/owl.png'
             }).then(message => {return message
             }).catch(e => { return e});
         }else{

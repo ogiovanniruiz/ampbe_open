@@ -8,7 +8,7 @@ var PrecinctsSchema = new Schema(
                     precinctID: String,
                     type: {type: String},
                     county: [{name: {type: String}}],
-                    registered: [{orgID: {type: String}, campaignID: {type: Number}}],
+                    //registered: [{orgID: {type: String}, campaignID: {type: Number}}],
                     locked: [{orgID: {type: String}, campaignID: {type: Number}, targetID: {type: String}, finished: {type: Boolean, default: false}}]
       }
     }

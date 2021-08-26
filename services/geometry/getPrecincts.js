@@ -3,13 +3,14 @@ const getPrecincts = async(detail) => {
     try {
 
         var precinctID = '';
+
         if(detail.precinctIDS){
             precinctID = { $in: detail.precinctIDS }
         }
 
         const agg = [
             { '$match': {
-                    "properties.precinctID": precinctID ? precinctID : { $exists: true },
+                    //"properties.precinctID": precinctID ? precinctID : { $exists: true },
                     '$or': [{
                         'properties.registered': { '$elemMatch': { 'campaignID': detail.campaignID } }
                     }, {

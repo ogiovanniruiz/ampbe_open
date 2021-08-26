@@ -3,19 +3,8 @@ var People = require('../../models/people/people')
 
 const downloadCampaignContactHistory = async(data) => {
     try {
-        var campaignReport = await OutreachReport.aggregate([{$match: {campaignID: data.campaignID}}])
+        return await OutreachReport.aggregate([{$match: {campaignID: data.campaignID , $or: [{person: {$exists: true}}, {affidavit: {$exists: true}}]}}])
 
-        for(var i = 0; i < campaignReport.length; i++){
-            if(!campaignReport[i].affidavit || !campaignReport[i].person){
-                var voter = await People.findOne({'resident.personID': campaignReport[i].personID})
-                if(voter){
-                    campaignReport[i].person = voter
-                    
-                }
-            }
-        }
-
-        return campaignReport
     } catch(e){
         throw new Error(e.message)
     }

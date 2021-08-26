@@ -7,7 +7,7 @@ const getTextbankContactHistory = async(data) => {
 
             var textbankContactHistory = await TextbankContactHistory.find({activityID: data.activity._id, complete: false})
 
-            console.log(textbankContactHistory)
+            //console.log(textbankContactHistory)
             var residentsSent = textbankContactHistory.map(x =>{return x['personID']});
 
             var residentsResponded = textbankContactHistory.filter(x => {return (x['textReceived']['status'])});
@@ -17,10 +17,13 @@ const getTextbankContactHistory = async(data) => {
         } else {
 
             var textbankContactHistory = await TextbankContactHistory.find({activityID: data.activity._id, userID: data.userID, complete: false})
+            //console.log(textbankContactHistory)
             var residentsSent = textbankContactHistory.map(x =>{return x['personID']});
 
             var residentsResponded = textbankContactHistory.filter(x => {return (x['textReceived']['status'])});
             var residentsRespondedIDS = textbankContactHistory.filter(x => {return (x['textReceived']['status'])}).map(x =>{return x['personID']});
+            //console.log(residentsResponded)
+            //console.log(residentsRespondedIDS)
             console.log("Not Admin.")
         }
 

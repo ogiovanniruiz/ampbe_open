@@ -54,17 +54,17 @@ const convertQueriesHousehold = async(queries) =>{
                 return {'_id.unit':  ""}
             }
         }else if(field === "blockgroups"){
-
-            return {location: {$geoIntersects: {$geometry: geometry}}}
+            return {blockgroupID: {$in: value}}
+            //return {location: {$geoIntersects: {$geometry: geometry}}}
         }else if(field === 'precincts'){
-
-            return {location: {$geoIntersects: {$geometry: geometry}}}
+            return {precinctID: {$in: value}}
+            //return {location: {$geoIntersects: {$geometry: geometry}}}
         }else if(field === 'polygons'){
 
             return {location: {$geoIntersects: {$geometry: geometry}}}
         }else if(field === 'scripts' || field === 'nonResponseSets'){
 
-            return {'residents._id': {[operator]: personIDs}}
+            return {'residents.personID': {[operator]: personIDs}}
         }else if(field === 'cities'){
             return {'_id.city': {$in: value}}
         }else if(field === 'tags'){

@@ -22,23 +22,24 @@ const massGeocodeVoters= async() => {
                         }
                     }
                 }, {
-                    '$limit': 100
+                    '$limit': 500
                 }
             ];
     
             var address = await HouseHold.aggregate(agg);
             var addressObject = {addresses: [], id: {}}
-            console.log(address, "HERE")
+            //console.log(address, "HERE")
     
             for(var i = 0; i < address.length; i++){
     
                 var astring = ""
-                console.log(address[i])
+                //console.log(address[i])
     
                 if(address[i]._id.streetNum) {astring = astring + address[i]._id.streetNum + " "}
                 if(address[i]._id.prefix) {astring = astring + address[i]._id.prefix + " "}
                 if(address[i]._id.street) {astring = astring + address[i]._id.street + " "}
                 if(address[i]._id.suffix) {astring = astring + address[i]._id.suffix + " "}
+                if(address[i]._id.unit) {astring = astring + address[i]._id.unit + " "}
                 if(address[i]._id.city) {astring = astring + address[i]._id.city + ", CA "}
                 if(address[i]._id.zip) {astring = astring + address[i]._id.zip}
     
@@ -47,7 +48,7 @@ const massGeocodeVoters= async() => {
     
             }
             if(address) {
-                console.log(addressObject.addresses)
+                //console.log(addressObject.addresses)
                 await geocodio.geocode(addressObject.addresses).then(async response => {
     
                     var bulkArray = [];
@@ -78,14 +79,20 @@ const massGeocodeVoters= async() => {
     
                     var updated = await HouseHold.bulkWrite(bulkArray);
                     console.log(updated)
+
+
+
     
                 }).catch(err => {
                     console.error(err);
                 });
-    
-    
-                index = index + 100
+
+                index = index + 500
                 console.log("Geocoded: ", index)
+    
+    
+
+               
     
             }else{
                 console.log("DONE")

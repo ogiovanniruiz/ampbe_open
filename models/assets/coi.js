@@ -9,6 +9,7 @@ var COISchema = new Schema(
                     userID: {type: String},
                     orgID: {type: String},
                     user: User.schema,
+                    orgName: {type: String},
                     date: {type: Date, default: Date.now},
                     questions: [{question: {type: String}, 
                                  answer: {type: String}}],

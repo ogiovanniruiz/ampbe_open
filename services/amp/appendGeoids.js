@@ -1,5 +1,6 @@
 const Blockgroup = require('../../models/targets/blockgroup')
 const HouseHold = require('../../models/houseHolds/houseHold')
+const Precinct = require('../../models/targets/precinct')
 
 const appendGeoids = async() => {
     try { 
@@ -7,6 +8,9 @@ const appendGeoids = async() => {
 
         var batch = true
 
+        var precinctMatch = true
+
+        /*
         if(!batch){
                     
             var houseHolds = await HouseHold.aggregate([{$match: {'blockgroupID': { $exists: false }}}]);
@@ -32,12 +36,13 @@ const appendGeoids = async() => {
                 }
             
             }
-        }
+        }*/
 
+        /*
         if(batch){
 
    
-        var blockgroups = await Blockgroup.find();
+        var blockgroups = await Blockgroup.find({'properties.county.name': "LOS ANGELES"});
 
         for(var i = 0; i < blockgroups.length; i++){
             console.log(blockgroups[i].properties.geoid)
@@ -81,7 +86,57 @@ const appendGeoids = async() => {
 
         return {msg: "DONZO"}
 
+    }*/
+
+    if(precinctMatch){
+
+        var precincts = await Precinct.find({'properties.county.name': "LOS ANGELES"});
+
+        for(var i = 0; i < precincts.length; i++){
+
+            console.log(precincts[i].properties.precinctID)
+            console.log(i)
+
+            const agg2 = [
+                {
+                    '$match': {
+                        'location.coordinates': { $elemMatch: { $exists: true } },
+                        'precinctID': { $exists: false },
+                        'location': {
+                            '$geoIntersects': {
+                                '$geometry': precincts[i].geometry
+                            }
+                        }
+                    }
+                }, {
+                    '$group': {
+                        '_id': null,
+                        'records': {
+                            '$push': '$_id'
+                        }
+                    }
+                }
+            ];
+
+            var saveprecinctID = await HouseHold.aggregate(agg2);
+
+            if(saveprecinctID.length) {
+                var updated = await HouseHold.updateMany(
+                    { _id: {$in: saveprecinctID[0].records} },
+                    { 'precinctID': precincts[i].properties.precinctID },
+                    { upsert: false, multi: true,}
+                );
+                console.log(updated)
+            }
+
+
+
+        }
+
     }
+
+
+
     } catch(e){
         throw new Error(e.message)
     }

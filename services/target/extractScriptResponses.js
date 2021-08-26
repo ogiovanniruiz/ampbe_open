@@ -67,6 +67,7 @@ const extractScriptResponses = async(queries, campaignID, orgID) =>{
             ];
 
             var geometry = await Blockgroups.aggregate(aggBG);
+            
             queries.rules[i].geometry.coordinates = await geometry[0].targets;
 
         }
@@ -74,13 +75,18 @@ const extractScriptResponses = async(queries, campaignID, orgID) =>{
 
         if(queries.rules[i].field === 'precincts'){
 
+            console.log("HERE")
+
             const aggPrec = [
                 {'$match': {'properties.precinctID': {'$in': queries.rules[i].value}}},
                 {'$group': {'_id': null, 'targets': {'$addToSet': {'$arrayElemAt': ['$geometry.coordinates', 0]}}}}
             ];
 
             var geometry = await Precincts.aggregate(aggPrec);
+            console.log(geometry[0])
+    
             queries.rules[i].geometry.coordinates = await geometry[0].targets;
+            console.log("GERE")
 
         }
 

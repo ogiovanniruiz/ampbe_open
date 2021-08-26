@@ -9,7 +9,7 @@ const getBlockgroups = async(detail) => {
 
         const agg = [
             { '$match': {
-                "properties.geoid": geoid ? geoid : { $exists: true },
+                //"properties.geoid": geoid ? geoid : { $exists: true },
                 '$or': [{
                     'properties.registered': { '$elemMatch': { 'campaignID': detail.campaignID } }
                 }, {

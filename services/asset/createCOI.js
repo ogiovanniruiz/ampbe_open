@@ -2,12 +2,18 @@ var COI = require('../../models/assets/coi')
 
 var Blockgroup = require('../../models/targets/blockgroup')
 var User = require('../../models/users/user')
+var Organization = require ('../../models/organizations/organization')
 
 const createCOI = async(coiDetail) => {
     try {
         
         coiDetail.properties.userID
         var user = await User.findById(coiDetail.properties.userID)
+        
+        coiDetail.properties.orgID
+        var org = await Organization.findById(coiDetail.properties.orgID)
+
+        coiDetail.properties.orgName = org.name
 
         coiDetail.properties.user = user
         var newCOI = new COI(coiDetail)
