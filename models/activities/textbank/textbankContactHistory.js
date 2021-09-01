@@ -10,6 +10,7 @@ var TextbankContactHistorySchema = new Schema(
      personID: {type: String},
      activityID: {type: String},
      orgID: {type: String},
+     orgName: {type: String},
      campaignID: {type: Number},
      userID: {type: String},
      userName: Name.schema,

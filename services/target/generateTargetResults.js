@@ -20,7 +20,7 @@ const generateTargetResults = async(activity) => {
             var invalidPhones = await TextRecord.find({$or: [{deviceType: {$ne: 'mobile'}}, {error: true}]})
 
             for(var i = 0; i < invalidPhones.length; i++){
-                excludedObjects.push({$ne: ["$$residents._id", invalidPhones[i].personID]})
+                excludedObjects.push({$ne: ["$$residents.personID", invalidPhones[i].personID]})
             }
         }
 

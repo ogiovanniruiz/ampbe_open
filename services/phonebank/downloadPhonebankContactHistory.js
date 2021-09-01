@@ -1,6 +1,7 @@
 var PhonebankContactHistory = require('../../models/activities/phonebank/phonebankContactHistory')
 var User = require('../../models/users/user')
 
+
 const downloadPhonebankContactHistory = async(detail) => {
     try { 
         var activityReport = await PhonebankContactHistory.find({activityID: detail.activityID})

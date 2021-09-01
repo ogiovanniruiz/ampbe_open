@@ -5,7 +5,7 @@ var ScriptResponseContact = require('../scriptResponse')
 var Person = require('../../people/people')
 var Name = require('../../people/name')
 
-var PhonebankContactHistorySchema = new Schema({
+var IncomingCallSchema = new Schema({
     personID: {type: String},
     activityID: {type: String},
     orgID: {type: String},
@@ -18,15 +18,11 @@ var PhonebankContactHistorySchema = new Schema({
     status: {type: String, enum: ['failed', 'completed', 'no-answer'], default: undefined},
     CallSid: {type: String},           
     residentPhonenum: {type: String},
-    userPhonenum: {type: String},
-    nonResponse: {type: NonresponseContact.schema, default: undefined},
-    scriptResponse: {type: ScriptResponseContact.schema, default: undefined},    
+    userPhonenum: {type: String},   
     person: Person.schema,
-    pass: {type: Number},
-    complete: {type: Boolean, default: false},
     member: {type: Boolean, default: false},
 }
 );
 
 //Export model
-module.exports = mongoose.model('PhonebankContactHistory', PhonebankContactHistorySchema);
+module.exports = mongoose.model('IncomingCall', IncomingCallSchema);

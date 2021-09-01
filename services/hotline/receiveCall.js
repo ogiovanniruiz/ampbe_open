@@ -2,11 +2,19 @@ var twilio = require('twilio');
 var VoiceResponse = twilio.twiml.VoiceResponse;
 var HotlineContactHistory = require('../../models/activities/hotline/hotlineContactHistory');
 var Activity = require('../../models/activities/activity')
+var IncomingCall = require('../../models/activities/phonebank/incomingCall')
 
 const receiveCall = async(detail) => {
     try {
         
-        console.log("Incoming Call...")
+        console.log("INCOMING CALL...")
+
+        console.log(detail)
+
+        //var incomingCall = new IncomingCall({})
+
+
+        /*
 
         const twiml = new VoiceResponse();
 
@@ -35,7 +43,7 @@ const receiveCall = async(detail) => {
         var voiceMailNumber = activity.hotlineMetaData.voiceMailNumber
         dial.number(voiceMailNumber);
 
-        return twiml.toString();
+        return twiml.toString();*/
         
     } catch(e){
         
