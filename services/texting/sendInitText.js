@@ -34,12 +34,19 @@ const sendInitText = async(detail) => {
         if(record.deviceType === 'mobile'){
             console.log("This is a mobile device. Sending text.")
             textSuccessful = true;
-            message = await client.messages.create({
+
+            var messegeDetails = {
                 body: detail.tbContactRecord.initTextMsg, 
                 from: detail.tbContactRecord.userPhonenum,
                 to: '+1' + phonenumber,
                 //mediaUrl: 'https://demo.twilio.com/owl.png'
-            }).then(message => {return message
+            }
+
+            if(detail.tbContactRecord.sendImage){
+                messegeDetails.mediaUrl = detail.tbContactRecord.imageUrl
+            }
+
+            message = await client.messages.create(messegeDetails).then(message => {return message
             }).catch(e => { return e});
         }else{
             console.log("This is NOT a mobile device. Skipping texting.")

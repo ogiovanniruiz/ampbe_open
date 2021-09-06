@@ -12,6 +12,8 @@ const saveActivityEdits = async(details) => {
             activity.textMetaData.quickResponses = details.edits.quickResponses
             activity.textMetaData.sendReceiverName =  details.edits.sendReceiverName
             activity.textMetaData.sendSenderName = details.edits.sendSenderName
+            activity.textMetaData.attachImage = details.edits.attachImage
+            activity.textMetaData.imageUrl = details.edits.imageUrl
         }
 
         activity.orgIDs = details.edits.orgIDs

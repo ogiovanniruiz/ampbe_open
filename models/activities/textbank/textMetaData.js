@@ -6,6 +6,8 @@ var TextMetaDataSchema = new Schema({
     initTextMsg: {type: String},
     sendReceiverName: {type: Boolean},
     sendSenderName: {type: Boolean},
+    attachImage: {type: Boolean},
+    imageUrl: {type: String},
     spanishMode: {type: Boolean, default: false},
     activityPhonenums: [{number: {type: String}, 
                          userID: {type: String}, 
