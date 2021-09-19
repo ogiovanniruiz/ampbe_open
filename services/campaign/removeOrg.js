@@ -26,8 +26,6 @@ const removeOrg = async(detail) => {
             } 
         }
     
-        //Target.remove({'properties.orgID': detail.orgID, 'properties.campaignID': detail.campaignID}).exec();
-    
         campaign.save()
         org.save()
         return {success: true, org: org, campaign: campaign,msg: "Success."}

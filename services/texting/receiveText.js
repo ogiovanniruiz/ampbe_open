@@ -1,5 +1,4 @@
 var Activity = require('../../models/activities/activity')
-var _ = require ('../../node_modules/underscore/underscore')
 var User = require('../../models/users/user')
 var TextbankContactHistory = require('../../models/activities/textbank/textbankContactHistory')
 var TextbankHouseHoldRecord = require('../../models/activities/textbank/textbankHouseholdRecord')

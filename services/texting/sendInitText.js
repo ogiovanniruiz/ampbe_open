@@ -1,5 +1,4 @@
 var Organization = require('../../models/organizations/organization')
-var _ = require ('underscore')
 var Campaign = require('../../models/campaigns/campaign');
 var TextbankContactHistory = require('../../models/activities/textbank/textbankContactHistory')
 var TextbankHouseHoldRecord = require('../../models/activities/textbank/textbankHouseholdRecord')
@@ -39,7 +38,6 @@ const sendInitText = async(detail) => {
                 body: detail.tbContactRecord.initTextMsg, 
                 from: detail.tbContactRecord.userPhonenum,
                 to: '+1' + phonenumber,
-                //mediaUrl: 'https://demo.twilio.com/owl.png'
             }
 
             if(detail.tbContactRecord.sendImage){
@@ -54,8 +52,16 @@ const sendInitText = async(detail) => {
        }
 
         var tbHouseHoldRecord = await TextbankHouseHoldRecord.findById(detail.houseHoldRecord._id)
-        tbHouseHoldRecord.initTextSent = true;
         tbHouseHoldRecord.numTextSent = tbHouseHoldRecord.numTextSent + 1
+
+        if(detail.tbContactRecord.idBy === 'HOUSEHOLD'){
+            tbHouseHoldRecord.initTextSent = true;
+        }else{
+            if(tbHouseHoldRecord.numTextSent >= tbHouseHoldRecord.houseHold.residents.length){
+                tbHouseHoldRecord.initTextSent = true
+            }
+        }
+        
         tbHouseHoldRecord.save()
 
         var newTextContactHistory = new TextbankContactHistory(detail.tbContactRecord)
@@ -72,7 +78,8 @@ const sendInitText = async(detail) => {
         }
 
         newTextContactHistory.person = person
-        return newTextContactHistory.save()
+        newTextContactHistory.save()
+        return {tbContactHistory: newTextContactHistory, tbHHRecord: tbHouseHoldRecord}
 
     } catch(e){
         console.log(e)

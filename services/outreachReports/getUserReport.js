@@ -29,9 +29,11 @@ const getUserReport = async(detail) => {
         var VERYNEGATIVE = [];
 
         var script = await detail.data.selectedScript;
-        if (script.questions) {
-            for(var i = 0; i < script.questions.length; i++){
-                await VERYPOSITIVE.push({
+
+        
+        if (!script.questions) {}
+        for(var i = 0; i < script.questions.length; i++){
+                VERYPOSITIVE.push({
                     [script.questions[i]._id]: {
                         '$size': {
                             '$filter': {
@@ -107,7 +109,7 @@ const getUserReport = async(detail) => {
                     }
                 });
             }
-        }
+        
 
         const agg = [
             {

@@ -8,13 +8,7 @@ const loadHouseHolds = async(detail) => {
                                                                      textReceived: false,
                                                                     })
 
-        var sentHouseHoldRecords = await TextbankHouseHoldRecord.find({lockedBy: detail.userID, 
-                                                                         activityID: detail.activityID,
-                                                                         initTextSent: true,
-                                                                         textReceived: false,
-                                                                       })                                                               
-        
-        return {success: true, lockedHouseHoldRecords: lockedHouseHoldRecords, sentHouseHoldRecords: sentHouseHoldRecords, msg: "Success"}
+        return {success: true, lockedHouseHoldRecords: lockedHouseHoldRecords, msg: "Success"}
 
     } catch(e){
         throw new Error(e.message)
