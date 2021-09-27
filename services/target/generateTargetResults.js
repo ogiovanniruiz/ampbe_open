@@ -25,16 +25,14 @@ const generateTargetResults = async(activity) => {
         }
 
         if(activity.activityType === 'Phonebank'){
-            var passed = { $toBool: false };
+            passed = { $toBool: false };
         }
 
         if(activity.activityType === 'Texting' || activity.activityType === 'Phonebank' ){
-            var outReachReport = await OutReachReport.find({campaignID: activity.campaignID, orgID: activity.orgIDs, $or: [{'nonResponse.nonResponseType': 'INVALIDPHONE'}, {'nonResponse.nonResponseType': 'DNC'}]})
+            var outReachReport = await OutReachReport.find({campaignID: activity.campaignID, orgID: activity.orgIDs[0], $or: [{'nonResponse.nonResponseType': 'INVALIDPHONE'}, {'nonResponse.nonResponseType': 'DNC'}]})
 
             for(var i = 0; i < outReachReport.length; i++){
-                //if(outReachReport[i].nonResponse && (outReachReport[i].nonResponse.nonResponseType === 'INVALIDPHONE' || outReachReport[i].nonResponse.nonResponseType === 'DNC')){
-                    excludedObjects.push({$ne: ["$$residents._id", outReachReport[i].personID]})
-                //}
+                excludedObjects.push({$ne: ["$$residents._id", outReachReport[i].personID]})
             }
         }
 
@@ -43,8 +41,7 @@ const generateTargetResults = async(activity) => {
         // Build filter
         if(target.properties.queries){
 
-            var queries = await ExtractScriptResponses.extractScriptResponses(target.properties.queries, activity.campaignID, activity.orgID)
-            
+            var queries = await ExtractScriptResponses.extractScriptResponses(target.properties.queries, activity.campaignID, activity.orgIDs[0])
             if(target.properties.idByHousehold === 'HOUSEHOLD'){
                 filter = await convertQueriesHousehold.convertQueriesHousehold(queries)
             } else if (target.properties.idByHousehold === 'INDIVIDUAL'){
@@ -57,14 +54,13 @@ const generateTargetResults = async(activity) => {
         // Add district type
         var districtType = {};
         var districtTypeSet = [];
-        if(campaign.boundary[0].properties.districtType && campaign.boundary[0].properties.districtType !== "NONE"){
-            var districtTypeParam = await "districts." + campaign.boundary[0].properties.districtType.toLowerCase() + "ID"
-            for(var i = 0; i < campaign.boundary.length; i++){
-                var id = campaign.boundary[i].properties.identifier
-                await districtTypeSet.push(id);
-            }
-            districtType[districtTypeParam] = await { $in: districtTypeSet}
+        var districtTypeParam = "districts." + campaign.boundary[0].properties.districtType.toLowerCase() + "ID"
+        for(var i = 0; i < campaign.boundary.length; i++){
+            var id = campaign.boundary[i].properties.identifier
+            districtTypeSet.push(id);
         }
+        districtType[districtTypeParam] = {$in: districtTypeSet}
+      
 
         // Remove empty phone numbers and landlines
         var phoneFilter = {$match: {}}

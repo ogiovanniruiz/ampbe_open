@@ -4,16 +4,16 @@ var Schema = mongoose.Schema;
 var DistrictsSchema = new Schema(
     {
         properties: {
-            name: String,
+            name: {type: String},
             state: {abbrv: {type: String, uppercase: true}, name: {type: String, uppercase: true}},
-            districtType: {type: String, enum: ['COUNTY', 'CITYWIDE', 'CITYWARD', 'ASSEMBLY', 'CONGRESSIONAL', 'BOARD OF EQUALIZATION', 'SENATE', 'RECREATIONAL', 'SCHOOL', 'WATER', 'NONE']},
-            identifier: String,
+            districtType: {type: String, enum: ['COUNTY', 'CITYWIDE', 'CITYWARD', 'ASSEMBLY', 'CONGRESSIONAL', 'BOARD OF EQUALIZATION', 'SENATE', 'RECREATIONAL', 'SCHOOL', 'WATER', 'STATEWIDE']},
+            identifier: {type: String},
             demographics: {
-                totalPop: Number,
+                totalPop: {type: Number},
             }
         },
         geometry: {},
-        type: String
+        type: {type: String}
     }
 );
 

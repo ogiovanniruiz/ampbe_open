@@ -5,9 +5,22 @@ var PolySchema = new Schema(
   {
     properties: {  
                   name: {type: String},
+                  description: {type: String},
                   campaignID: {type: Number},
                   orgID: {type: String},
                   userID: {type: String},
+                  date: {type: Date, default: Date.now},
+                  demographics: {
+                    totalPop: {type: Number}, 
+                    percentIndig: {type: Number}, 
+                    percentWhite: {type: Number},
+                    percentOther: {type: Number},
+                    percentBlack: {type: Number},
+                    percentHispanic: {type: Number},
+                    percentAsian: {type: Number},
+                    percentPI: {type: Number},
+                   }  
+                  
                 },
     type: {type: String, default: "Feature"},
     geometry: {},

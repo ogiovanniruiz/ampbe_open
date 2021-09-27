@@ -2,7 +2,6 @@ var phonebankHouseHoldRecord = require('../../models/activities/phonebank/phoneb
 var submitOutreachEntry= require('../activity/submitOutreachEntry')
 var PhonebankContactHistory = require('../../models/activities/phonebank/phonebankContactHistory')
 var lockHouseHold = require('../phonebank/lockHouseHold')
-var _ = require ('underscore')
 
 const submitPhoneScriptResponse = async(details) => {
     try {

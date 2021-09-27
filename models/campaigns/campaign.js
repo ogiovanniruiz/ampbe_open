@@ -15,12 +15,12 @@ var CampaignSchema = new Schema(
     requests: [{type: String}],
     dataManagers: [{type: String}],
     boundary: [{type: Districts.schema}],
+    boundaryIDs: [{type: String}],
     electionType: {type: String},
     fundedByCreatorOrg: {type: Boolean, default: false},
     creatorOrg: {type: String},
     geographical: {type: Boolean, default: false},
-    blockgroupIDS: [],
-    precinctIDS: [],
+
   }
 );
 

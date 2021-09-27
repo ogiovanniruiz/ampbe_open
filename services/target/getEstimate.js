@@ -16,28 +16,25 @@ const getEstimate = async(estimate) => {
         var filter = {}
         if(estimate.queries){
             var queries = await ExtractScriptResponses.extractScriptResponses(estimate.queries, estimate.campaignID, estimate.orgID)
-
             if(estimate.idByHousehold === 'HOUSEHOLD'){
                 filter = await convertQueriesHousehold.convertQueriesHousehold(queries)
             } else if (estimate.idByHousehold === 'INDIVIDUAL'){
                 filter = await convertQueriesIndividual.convertQueriesIndividual(queries)
             } else{
                 filter = await convertQueriesMembership.convertQueriesMembership(queries)
+
             }
         }
 
         var districtType = {};
         var districtTypeSet = [];
-        if(campaign.boundary[0].properties.districtType && campaign.boundary[0].properties.districtType !== "NONE"){
-            var districtTypeParam = await "districts." + campaign.boundary[0].properties.districtType.toLowerCase() + "ID";
-            for(var i = 0; i < campaign.boundary.length; i++){
-                var id = campaign.boundary[i].properties.identifier
-                await districtTypeSet.push(id);
-            }
-            districtType[districtTypeParam] = await { $in: districtTypeSet}
-        }else{
-            //districtType['_id.state.name'] = campaign.boundary.properties.state.name
+        var districtTypeParam = "districts." + campaign.boundary[0].properties.districtType.toLowerCase() + "ID";
+        for(var i = 0; i < campaign.boundary.length; i++){
+            var id = campaign.boundary[i].properties.identifier
+            districtTypeSet.push(id);
         }
+        districtType[districtTypeParam] = { $in: districtTypeSet}
+      
 
         if(estimate.idByHousehold === 'HOUSEHOLD'){
             agg = [

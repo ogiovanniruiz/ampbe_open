@@ -19,7 +19,7 @@ var corsOptions = {
                     origin: ""
                   }
 
-process.env.version = "0.9.9.4v"
+process.env.version = "0.9.9.4w"
 
 if(app.get('env') === 'development'){
 
@@ -34,6 +34,7 @@ if(app.get('env') === 'development'){
   process.env.contactEmail = localEnv.contactEmail
   process.env.contactEmailPassword = localEnv.contactEmailPassword
   process.env.geocodioAPIKey = localEnv.geocodioAPIKey
+  process.env.stripeAPIKey = localEnv.stripeAPIKey
 
   mongoDB = localEnv.mongoDB
   corsOptions.origin = localEnv.fe

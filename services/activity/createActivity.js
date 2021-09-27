@@ -1,10 +1,6 @@
 var Activity = require('../../models/activities/activity')
-var Campaign = require('../../models/campaigns/campaign')
 
 var generateTargetResults = require('../target/generateTargetResults')
-var CallPool = require('../../models/organizations/callPool')
-var PhonebankHouseHoldRecord = require('../../models/activities/phonebank/phonebankHouseHoldRecord')
-var TextbankHouseHoldRecord = require('../../models/activities/textbank/textbankHouseholdRecord')
 
 var HouseHold = require('../../models/houseHolds/houseHold')
 var People = require('../../models/people/people')

@@ -13,71 +13,7 @@ const createCampaign = async(newCampaignDetail) => {
             return {success: false, msg: "Campaign with that name already exists."}
         }
 
-        if(newCampaignDetail.boundaryType !== 'NONE') {
-            var boundary = {};
-            if (newCampaignDetail.boundaryType === 'DISTRICT') {
-                boundary = await Districts.find({'_id': {$in: newCampaignDetail.boundaryID}});
-            } else {
-                boundary = await States.find({'_id': {$in: newCampaignDetail.boundaryID}});
-            }
-
-            var geoboundary = []
-            for (var i = 0; i < boundary.length; i++) {
-                await geoboundary.push(boundary[i].geometry.coordinates[0]);
-            }
-
-            const aggBlockgroups = [
-                {
-                    '$match': {
-                        'geometry': {
-                            $geoIntersects: {'$geometry': {type: 'MultiPolygon', coordinates: geoboundary}}
-                        }
-                    }
-                }, {
-                    '$group': {
-                        '_id': null,
-                        'ids': {
-                            '$push': '$properties.geoid'
-                        }
-                    }
-                }
-            ];
-            var targetsBlockgroupIDS = await Blockgroups.aggregate(aggBlockgroups);
-
-            const aggPrecincts = [
-                {
-                    '$match': {
-                        'geometry': {
-                            $exists: true
-                        },
-                        'geometry': {
-                            $geoIntersects: {'$geometry': {type: 'MultiPolygon', coordinates: geoboundary}}
-                        }
-                    }
-                }, {
-                    '$group': {
-                        '_id': null,
-                        'ids': {
-                            '$push': '$properties.precinctID'
-                        }
-                    }
-                }
-            ];
-            var targetsPrecinctIDS = await Precincts.aggregate(aggPrecincts);
-        } else {
-            var targetsBlockgroupIDS = [];
-            var targetsPrecinctIDS = [];
-
-            var boundary = {
-                properties : {
-                    name: "NONE",
-                    state: { name: "CALIFORNIA", abbrv: "CA" },
-                    districtType: "NONE",
-                    identifier: "CA_NONE_NONE",
-                },
-                type : 'Feature',
-            };
-        }
+        var boundary = await Districts.find({'_id': {$in: newCampaignDetail.boundaryID}});
 
         var campaignDetail = {name: newCampaignDetail.name,
                               description: newCampaignDetail.description,
@@ -87,9 +23,7 @@ const createCampaign = async(newCampaignDetail) => {
                               electionType: newCampaignDetail.electionType,
                               fundedByCreatorOrg: newCampaignDetail.fundedByCreatorOrg,
                               creatorOrg: newCampaignDetail.orgID,
-                              geographical: newCampaignDetail.geographical,
-                              blockgroupIDS: targetsBlockgroupIDS.length ? targetsBlockgroupIDS[0].ids : [],
-                              precinctIDS: targetsPrecinctIDS.length ? targetsPrecinctIDS[0].ids : []
+                              geographical: newCampaignDetail.geographical
                              };
 
         var campaign = new Campaign(campaignDetail);

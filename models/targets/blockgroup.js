@@ -12,8 +12,11 @@ var BlockGroupsSchema = new Schema(
                     demographics: {totalPop: {type: Number}, 
                                    percentMale: {type: Number}, 
                                    percentFemale: {type: Number}, 
+
                                    percentWhite: {type: Number},
                                    percentBlack: {type: Number},
+                                   percentIndig: {type: Number}, 
+                                   percentOther: {type: Number}, 
                                    percentHispanic: {type: Number},
                                    percentAsian: {type: Number},
                                    percentPI: {type: Number},

@@ -10,7 +10,7 @@ var StatesSchema = new Schema(
             }
         },
         geometry: {},
-        type: String
+        type: {type: String}
     }
 );
 

@@ -9,15 +9,8 @@ const getBlockgroupsByBounds= async(detail) => {
         p4 = [detail.bounds._southWest.lng, detail.bounds._southWest.lat]
         var arrayCoords = [p0, p1, p2, p3, p4]
 
-        var geoid = '';
-        if(detail.blockgroupIDS){
-            geoid = { $in: detail.blockgroupIDS }
-        }
-
-        return await Blockgroups.find({ 
-                                        //"properties.geoid": geoid ? geoid : { $exists: true },
-                                         geometry: {$geoIntersects: { $geometry: {type: "Polygon" , coordinates: [arrayCoords] }}}
-                                       });
+        return await Blockgroups.find({ geometry: {$geoIntersects: { $geometry: {type: "Polygon" , coordinates: [arrayCoords] }}}});
+        
     } catch(e){
         throw new Error(e.message)
     }

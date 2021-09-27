@@ -6,7 +6,7 @@ var CampaignBlockgroupsSchema = new Schema(
     {
         geometry: {},
         properties: { 
-                      geoid: String,
+                      geoid: {type: String},
                       campaignID: [Number],
                       state: {abbrv: {type: String, uppercase: true}, name: {type: String, uppercase: true}},
                       

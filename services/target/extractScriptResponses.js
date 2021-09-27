@@ -12,8 +12,8 @@ const extractScriptResponses = async(queries, campaignID, orgID) =>{
         queries.rules[i].personIDs = [];
 
         if(queries.rules[i].field === 'scripts' && queries.rules[i].value){
-            var outReachReport = await OutReachReport.find({campaignID: campaignID, orgID: orgID, scriptResponse: {$exists: true}})
-            
+            var outReachReport = await OutReachReport.find({orgID: orgID, scriptResponse: {$exists: true}})
+
             for(var k = 0; k < queries.rules[i].value.length; k++){
 
                 var scriptID = queries.rules[i].value[k]._id;
@@ -22,7 +22,7 @@ const extractScriptResponses = async(queries, campaignID, orgID) =>{
 
                 var targetOutReachEntries = outReachReport.filter(
                     outReachEntry => 
-                        outReachEntry['scriptResponse'] &&
+                        //outReachEntry['scriptResponse'] &&
                         outReachEntry['scriptID'] === scriptID &&
                         outReachEntry['scriptResponse']['questionResponses'] &&
                         outReachEntry['scriptResponse']['questionResponses'].some(
@@ -40,14 +40,14 @@ const extractScriptResponses = async(queries, campaignID, orgID) =>{
         }
 
         if(queries.rules[i].field === 'nonResponseSets' && queries.rules[i].value){
-            var outReachReport = await OutReachReport.find({campaignID: campaignID, orgID: orgID, nonResponse: {$exists: true}})
+            var outReachReport = await OutReachReport.find({orgID: orgID, nonResponse: {$exists: true}})
             for(var k = 0; k < queries.rules[i].value.length; k++){
                 var nonResponseSetID = queries.rules[i].value[k]._id;
                 var nonResponseType = queries.rules[i].value[k].nonResponseType;
 
                 var targetOutReachEntries = outReachReport.filter(
                     outReachEntry => 
-                        outReachEntry['nonResponse'] &&
+                        //outReachEntry['nonResponse'] &&
                         outReachEntry['nonResponse']['nonResponseSetID'] === nonResponseSetID &&
                         outReachEntry['nonResponse']['nonResponseType'] === nonResponseType
                 );
