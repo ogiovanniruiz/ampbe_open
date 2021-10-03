@@ -4,12 +4,10 @@ var Schema = mongoose.Schema;
 var PrecinctsSchema = new Schema(
     {
       geometry: {},
-      properties: { precinctName: String,
-                    precinctID: String,
+      properties: { precinctName: {type: String},
+                    precinctID: {type: String},
                     type: {type: String},
                     county: [{name: {type: String}}],
-                    //registered: [{orgID: {type: String}, campaignID: {type: Number}}],
-                    locked: [{orgID: {type: String}, campaignID: {type: Number}, targetID: {type: String}, finished: {type: Boolean, default: false}}]
       }
     }
 );

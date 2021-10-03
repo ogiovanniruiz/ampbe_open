@@ -1,8 +1,4 @@
 var Campaign = require('../../models/campaigns/campaign');
-var Districts = require('../../models/campaigns/districts');
-var States = require('../../models/campaigns/states');
-var Blockgroups = require('../../models/targets/blockgroup');
-var Precincts = require('../../models/targets/precinct');
 
 const editCampaign = async(data) => {
     try {
@@ -19,11 +15,9 @@ const editCampaign = async(data) => {
             campaign.name = data.name;
             campaign.description = data.description;
 
-            var boundary = await Districts.find({'_id': {$in: data.editData.boundaryID}});
-
-
             if(data.editData.boundaryType) {
-                campaign.boundary = boundary;
+
+                campaign.boundaryIDs = data.editData.boundaryID
                 campaign.electionType = data.editData.editElectionType;
                 campaign.geographical = data.editData.geographical;
                 campaign.fundedByCreatorOrg = data.editData.fundedByCreatorOrg;

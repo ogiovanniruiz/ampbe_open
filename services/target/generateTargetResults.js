@@ -7,6 +7,8 @@ var ExtractScriptResponses = require('./extractScriptResponses')
 var TextRecord = require('../../models/activities/textbank/textRecords')
 var OutReachReport = require('../../models/campaigns/outreachReport')
 
+var Districts = require('../../models/campaigns/districts');
+
 
 const generateTargetResults = async(activity) => {
     try { 
@@ -54,9 +56,11 @@ const generateTargetResults = async(activity) => {
         // Add district type
         var districtType = {};
         var districtTypeSet = [];
-        var districtTypeParam = "districts." + campaign.boundary[0].properties.districtType.toLowerCase() + "ID"
-        for(var i = 0; i < campaign.boundary.length; i++){
-            var id = campaign.boundary[i].properties.identifier
+
+        var boundary = await Districts.find({'properties.identifier': {$in: campaign.boundaryIDs}})
+        var districtTypeParam = "districts." + boundary[0].properties.districtType.toLowerCase() + "ID"
+        for(var i = 0; i < boundary.length; i++){
+            var id = boundary[i].properties.identifier
             districtTypeSet.push(id);
         }
         districtType[districtTypeParam] = {$in: districtTypeSet}

@@ -1,12 +1,11 @@
 var Districts = require('../../models/campaigns/districts')
-var States = require('../../models/campaigns/states')
 var Campaign = require('../../models/campaigns/campaign')
 
 const getCampaignBoundary = async(data) => {
     try { 
         var campaign = await Campaign.findOne({campaignID: data.campaignID})
-        return campaign.boundary
-
+        return await Districts.find({'properties.identifier': {$in: campaign.boundaryIDs}})
+        
     } catch(e){
         throw new Error(e.message)
     }

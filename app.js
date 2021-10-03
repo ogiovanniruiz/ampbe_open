@@ -19,7 +19,7 @@ var corsOptions = {
                     origin: ""
                   }
 
-process.env.version = "0.9.9.4w"
+process.env.version = "0.9.9.4x"
 
 if(app.get('env') === 'development'){
 

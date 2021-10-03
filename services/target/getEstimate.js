@@ -5,6 +5,7 @@ var convertQueriesHousehold = require('./convertQueriesHousehold')
 var convertQueriesIndividual = require('./convertQueriesIndividual')
 var convertQueriesMembership = require('./convertQueriesMembership')
 var ExtractScriptResponses = require('./extractScriptResponses')
+var Districts = require('../../models/campaigns/districts');
 
 var Membership = require('../../models/organizations/membership')
 
@@ -28,9 +29,11 @@ const getEstimate = async(estimate) => {
 
         var districtType = {};
         var districtTypeSet = [];
-        var districtTypeParam = "districts." + campaign.boundary[0].properties.districtType.toLowerCase() + "ID";
-        for(var i = 0; i < campaign.boundary.length; i++){
-            var id = campaign.boundary[i].properties.identifier
+
+        var boundary = await Districts.find({'properties.identifier': {$in: campaign.boundaryIDs}})
+        var districtTypeParam = "districts." + boundary[0].properties.districtType.toLowerCase() + "ID";
+        for(var i = 0; i < boundary.length; i++){
+            var id = boundary[i].properties.identifier
             districtTypeSet.push(id);
         }
         districtType[districtTypeParam] = { $in: districtTypeSet}

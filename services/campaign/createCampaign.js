@@ -1,9 +1,5 @@
 var Organization = require('../../models/organizations/organization');
 var Campaign = require('../../models/campaigns/campaign');
-var Districts = require('../../models/campaigns/districts');
-var States = require('../../models/campaigns/states');
-var Blockgroups = require('../../models/targets/blockgroup');
-var Precincts = require('../../models/targets/precinct');
 var User = require('../../models/users/user')
 
 const createCampaign = async(newCampaignDetail) => {
@@ -13,13 +9,11 @@ const createCampaign = async(newCampaignDetail) => {
             return {success: false, msg: "Campaign with that name already exists."}
         }
 
-        var boundary = await Districts.find({'_id': {$in: newCampaignDetail.boundaryID}});
-
         var campaignDetail = {name: newCampaignDetail.name,
                               description: newCampaignDetail.description,
                               orgIDs: [newCampaignDetail.orgID],
                               dataManagers: [newCampaignDetail.userID],
-                              boundary: boundary,
+                              boundaryIDs: newCampaignDetail.boundaryID,
                               electionType: newCampaignDetail.electionType,
                               fundedByCreatorOrg: newCampaignDetail.fundedByCreatorOrg,
                               creatorOrg: newCampaignDetail.orgID,
