@@ -5,10 +5,19 @@ const getFundedStatus = async(data) => {
     try { 
         var campaign = await Campaign.findOne({campaignID:  data.campaignID})
 
+        if(!campaign){
+            var org = await Organization.findById(data.orgID)
+            return org.funded
+        }
+
         var orgID = '';
 
-        if(campaign.fundedByCreatorOrg){orgID = campaign.creatorOrg}
-        else{orgID = data.orgID}
+        
+        if(campaign.fundedByCreatorOrg){
+            orgID = campaign.creatorOrg}
+        else{
+            orgID = data.orgID
+        }
 
         var org = await Organization.findById(orgID)
 

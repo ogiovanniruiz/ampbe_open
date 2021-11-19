@@ -7,13 +7,15 @@ var People = require('../../models/people/people')
 const submitCanvassScriptResponse = async(details) => {
     try { 
 
+        //console.log(details)
+
         var canvassContactHistory = new CanvassContactHistory({personID: details.personID, 
                                                                  userID: details.user._id, 
                                                                  orgID: details.orgID,
                                                                  campaignID: details.activity.campaignID,
                                                                  activityID: details.activity._id,
                                                                  userName: details.user.name,
-                                                                 scriptResponse: {contactedBy: details.userID, questionResponses: details.idResponses},       
+                                                                 scriptResponse: {contactedBy: details.user._id, questionResponses: details.idResponses},       
                                                                  complete: true
                                                                })
                                                 
@@ -64,7 +66,7 @@ const submitCanvassScriptResponse = async(details) => {
             cHHRecord.passed = true;
             cHHRecord.complete = true;
         }else{
-            if(cHHRecord.numResContacted >= details.hhSize || pbHHRecord.residentStatus.length >= details.hhSize){
+            if(cHHRecord.numResContacted >= details.hhSize || cHHRecord.residentStatus.length >= details.hhSize){
                 cHHRecord.passed = true;
                 cHHRecord.complete = true;
             }

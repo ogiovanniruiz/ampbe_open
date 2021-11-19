@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-
 var VoteHistorySchema = new Schema(
   {
     personID: {type: String},

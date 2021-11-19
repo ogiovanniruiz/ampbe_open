@@ -57,13 +57,13 @@ const submitCanvassNonResponse = async(details) => {
 
         ccHHRecord.numResContacted = ccHHRecord.numResContacted + 1;
         
-        if(details.nonResponseType == "DNC" || details.nonResponseType === "INVALIDPHONE"){
+        if(details.nonResponseType == "DNC" || details.nonResponseType === "INVALIDADDRESS"){
             ccHHRecord.residentStatus.push("COMPLETE");
         }
 
         if(ccHHRecord.numResContacted >= details.hhSize || ccHHRecord.residentStatus.length >= details.hhSize){
             ccHHRecord.passed = true;
-            if(details.nonResponseType == "DNC" || details.nonResponseType === "INVALIDPHONE"){
+            if(details.nonResponseType == "DNC" || details.nonResponseType === "INVALIDADDRESS"){
                 ccHHRecord.complete = true;
             }
         } 

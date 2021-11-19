@@ -21,8 +21,6 @@ const getOrgPhoneNumbers = async(detail) => {
         
         }
 
-        //var org = await Organization.findOne({"_id": detail.orgID})
-
         if(org.twilioAccount.sid && org.twilioAccount.authToken){
             const client = require('twilio')(org.twilioAccount.sid, org.twilioAccount.authToken);
             return await client.incomingPhoneNumbers.list({limit: 20}).then(incomingPhoneNumbers => {return incomingPhoneNumbers});

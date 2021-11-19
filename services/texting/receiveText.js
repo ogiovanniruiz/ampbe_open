@@ -27,9 +27,10 @@ const receiveText = async(incoming) =>{
             return
         }
 
-        var textContactHistory = await TextbankContactHistory.find({residentPhonenum: residentPhonenum,
+        var textContactHistory = await TextbankContactHistory.find({   activityID: activity._id,
+                                                                       residentPhonenum: residentPhonenum,
                                                                        userPhonenum: userPhonenum,
-                                                                       activityID: activity._id
+                                                                       
                                                                     }).sort({$natural:-1}).limit(1)
 
         if(textContactHistory.length > 0){

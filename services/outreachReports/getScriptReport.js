@@ -39,7 +39,7 @@ const getScriptReport = async(detail) => {
 
                 if (script.questions) {
                     for(var i = 0; i < script.questions.length; i++){
-                        await VERYPOSITIVE.push({
+                        VERYPOSITIVE.push({
                             [script.questions[i]._id]: {
                                 '$size': {
                                     '$filter': {
@@ -54,7 +54,7 @@ const getScriptReport = async(detail) => {
                                 }
                             }
                         });
-                        await POSITIVE.push({
+                        POSITIVE.push({
                             [script.questions[i]._id]: {
                                 '$size': {
                                     '$filter': {
@@ -69,7 +69,7 @@ const getScriptReport = async(detail) => {
                                 }
                             }
                         });
-                        await NEUTRAL.push({
+                        NEUTRAL.push({
                             [script.questions[i]._id]: {
                                 '$size': {
                                     '$filter': {
@@ -84,7 +84,7 @@ const getScriptReport = async(detail) => {
                                 }
                             }
                         });
-                        await NEGATIVE.push({
+                        NEGATIVE.push({
                             [script.questions[i]._id]: {
                                 '$size': {
                                     '$filter': {
@@ -99,7 +99,7 @@ const getScriptReport = async(detail) => {
                                 }
                             }
                         });
-                        await VERYNEGATIVE.push({
+                        VERYNEGATIVE.push({
                             [script.questions[i]._id]: {
                                 '$size': {
                                     '$filter': {

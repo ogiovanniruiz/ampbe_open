@@ -193,13 +193,13 @@ const getCanvassReport = async(detail) => {
                                     }
                                 }
                             },
-                            'INVALIDPHONE': {
+                            'INVALIDADDRESS': {
                                 '$size': {
                                     '$filter': {
                                         'input': '$residents',
                                         'cond': {
                                             '$eq': [
-                                                '$$this.nonResponse.nonResponseType', 'INVALIDPHONE'
+                                                '$$this.nonResponse.nonResponseType', 'INVALIDADDRESS'
                                             ]
                                         }
                                     }

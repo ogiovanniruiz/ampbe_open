@@ -11,7 +11,7 @@ var ScriptSchema = new Schema(
     dateCreated: {type: Date, default: Date.now},
     campaignIDs: [{type: Number}],
     orgStatus: {orgID: {type: String}, active: {type: Boolean, default: true}},
-    participatingOrgs: [{orgID: {type: String}, active: {type: Boolean, default: true}}]
+    //participatingOrgs: [{orgID: {type: String}, active: {type: Boolean, default: true}}]
   }
 );
 

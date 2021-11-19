@@ -4,7 +4,8 @@ const createOrg = async(detail) => {
     try { 
         var newOrg = {
                       name: detail.name, 
-                      description: detail.description
+                      description: detail.description,
+                      subscription: {expDate: detail.expDate, cost: detail.cost}
                      }
 
         var existingOrg = await Organization.findOne({name: detail.name})

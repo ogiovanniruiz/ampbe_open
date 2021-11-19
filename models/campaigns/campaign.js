@@ -1,8 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var Districts = require('./districts')
-
 autoIncrement = require('mongoose-auto-increment');
 
 var CampaignSchema = new Schema(
@@ -14,7 +12,6 @@ var CampaignSchema = new Schema(
     active: {type: Boolean, default: true},
     requests: [{type: String}],
     dataManagers: [{type: String}],
-    //boundary: [{type: Districts.schema}],
     boundaryIDs: [{type: String}],
     electionType: {type: String},
     fundedByCreatorOrg: {type: Boolean, default: false},

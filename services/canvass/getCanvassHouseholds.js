@@ -6,14 +6,9 @@ const getCanvassHouseholds = async(details) => {
 
         return await Canvasshouseholdrecord.aggregate([
             {$match: {activityID: details.activityID}},
-            
-            {$group: {_id: {
-                            location:'$houseHold.location',
-                            },
-                        houseHold: {$first: '$houseHold'},
+            {$group: {_id: {location:'$houseHold.location'},
                         records: {$push: '$$ROOT'},
                         complete: {$push: '$complete'}
-
                         }
             }
         
