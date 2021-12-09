@@ -7,7 +7,7 @@ var CanvassHouseHoldRecordSchema = new Schema({
     lockedBy: {type: String},
     complete: {type: Boolean, default: false},
     passed: {type: Boolean, default: false},
-    residentStatus: [{type: String}],
+    //residentStatus: [{type: String}],
     numResContacted: {type: Number, default: 0},
     houseHold: HouseHold.schema,
     date: {type: Date, default: Date.now}

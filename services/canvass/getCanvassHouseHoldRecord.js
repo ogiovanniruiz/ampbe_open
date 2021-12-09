@@ -12,7 +12,8 @@ const getCanvassHouseHoldRecord = async(details) => {
             },
             {$group: {_id: {location:'$houseHold.location'},
                       records: {$push: '$$ROOT'},
-                      complete: {$push: '$complete'}
+                      complete: {$push: '$complete'},
+                      passed: {$push: '$passed'}
                     }
             }
         

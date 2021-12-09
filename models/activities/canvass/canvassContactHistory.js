@@ -14,8 +14,8 @@ var CanvassContactHistorySchema = new Schema({
     userName: Name.schema,
     nonResponse: {type: NonresponseContact.schema, default: undefined},
     scriptResponse: {type: ScriptResponseContact.schema, default: undefined},    
-    person: Person.schema,
     pass: {type: Number},
+    person: Person.schema,
     complete: {type: Boolean, default: false},
     member: {type: Boolean, default: false},
 }

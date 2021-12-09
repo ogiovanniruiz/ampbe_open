@@ -8,7 +8,8 @@ const getCanvassHouseholds = async(details) => {
             {$match: {activityID: details.activityID}},
             {$group: {_id: {location:'$houseHold.location'},
                         records: {$push: '$$ROOT'},
-                        complete: {$push: '$complete'}
+                        complete: {$push: '$complete'},
+                        passed: {$push: '$passed'}
                         }
             }
         

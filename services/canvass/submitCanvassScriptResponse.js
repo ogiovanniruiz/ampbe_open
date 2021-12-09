@@ -59,14 +59,14 @@ const submitCanvassScriptResponse = async(details) => {
 
         var cHHRecord = await CanvassHouseHoldRecord.findOne({'houseHold._id': houseHoldID, activityID: details.activity._id});
 
-        cHHRecord.residentStatus.push("COMPLETE");
+        //cHHRecord.residentStatus.push("COMPLETE");
         cHHRecord.numResContacted = cHHRecord.numResContacted + 1;
 
         if(details.activity.idByHousehold === 'HOUSEHOLD'){
             cHHRecord.passed = true;
             cHHRecord.complete = true;
         }else{
-            if(cHHRecord.numResContacted >= details.hhSize || cHHRecord.residentStatus.length >= details.hhSize){
+            if(cHHRecord.numResContacted >= details.hhSize){ //|| cHHRecord.residentStatus.length >= details.hhSize){
                 cHHRecord.passed = true;
                 cHHRecord.complete = true;
             }

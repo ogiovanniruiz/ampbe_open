@@ -7,19 +7,23 @@ const submitCanvassNonResponse = async(details) => {
     try {
 
         var canvassContactHistory = new CanvassContactHistory({personID: details.personID, 
-                                                                        userID: details.user._id, 
-                                                                        orgID: details.orgID,
-                                                                        campaignID: details.activity.campaignID,
-                                                                        activityID: details.activity._id,
-                                                                        userName: details.user.name,
-                                                                        nonResponse: {contactedBy: details.userID, nonResponse: details.nonResponse, nonResponseType: details.nonResponseType, nonResponseSetID: details.nonResponseSetID} ,    
-                                                                        complete: true
-        
-                                                                    })
+                                                               userID: details.user._id, 
+                                                               orgID: details.orgID,
+                                                               campaignID: details.activity.campaignID,
+                                                               activityID: details.activity._id,
+                                                               userName: details.user.name,
+                                                               nonResponse: {contactedBy: details.userID, nonResponse: details.nonResponse, nonResponseType: details.nonResponseType, nonResponseSetID: details.nonResponseSetID} ,    
+                                                               //comp: true
+                                                            })
 
         var person = await People.findOne({'resident.personID': details.personID})
 
         canvassContactHistory.person = person
+
+        if(details.nonResponseType == "DNC" || details.nonResponseType === "INVALIDADDRESS"){
+            canvassContactHistory.complete = true
+        }
+
         canvassContactHistory.save()
 
         const { _id, ...cContactHistoryEntry } = canvassContactHistory._doc;
@@ -56,16 +60,24 @@ const submitCanvassNonResponse = async(details) => {
         var ccHHRecord = await CanvassHouseHoldRecord.findOne({'houseHold._id': houseHoldID, activityID: details.activity._id});
 
         ccHHRecord.numResContacted = ccHHRecord.numResContacted + 1;
+
+        if(details.activity.idByHousehold === 'HOUSEHOLD'){
+            
+        }
+        else{
+
+        }
         
         if(details.nonResponseType == "DNC" || details.nonResponseType === "INVALIDADDRESS"){
-            ccHHRecord.residentStatus.push("COMPLETE");
+            //ccHHRecord.residentStatus.push("COMPLETE");
+            ccHHRecord.complete = true;
         }
 
-        if(ccHHRecord.numResContacted >= details.hhSize || ccHHRecord.residentStatus.length >= details.hhSize){
+        if(ccHHRecord.numResContacted >= details.hhSize){ //|| ccHHRecord.residentStatus.length >= details.hhSize){
             ccHHRecord.passed = true;
-            if(details.nonResponseType == "DNC" || details.nonResponseType === "INVALIDADDRESS"){
-                ccHHRecord.complete = true;
-            }
+            //if(details.nonResponseType == "DNC" || details.nonResponseType === "INVALIDADDRESS"){
+            //    ccHHRecord.complete = true;
+            //}
         } 
 
         return await ccHHRecord.save()

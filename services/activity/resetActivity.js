@@ -1,6 +1,7 @@
 var Activity = require('../../models/activities/activity')
 var PhonebankHouseHoldRecord = require('../../models/activities/phonebank/phonebankHouseHoldRecord')
 var TextbankHouseHoldRecord = require('../../models/activities/textbank/textbankHouseholdRecord')
+var CanvassHouseHoldRecord = require('../../models/activities/canvass/canvassHouseHoldRecord')
 
 const resetActivity = async(details) => {
     try { 
@@ -28,6 +29,17 @@ const resetActivity = async(details) => {
                 phonebankHouseHoldRecord[i].lockedBy = undefined;
                 phonebankHouseHoldRecord[i].numResContacted = 0;
                 phonebankHouseHoldRecord[i].save()
+            }
+        }
+
+        if(activity.activityType === "Canvass"){
+
+            var canvassHouseHoldRecord = await CanvassHouseHoldRecord.find({activityID: details.activityID, complete: false})
+
+            for(var i = 0; i < canvassHouseHoldRecord.length; i++ ){
+                canvassHouseHoldRecord[i].passed = false;
+                canvassHouseHoldRecord[i].numResContacted = 0;
+                canvassHouseHoldRecord[i].save()
             }
         }
 

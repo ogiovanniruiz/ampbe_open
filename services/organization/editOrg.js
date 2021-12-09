@@ -18,8 +18,8 @@ const editOrg = async(data) => {
 
             org.name = data.name
             org.description = data.description
-            org.subscription.expDate = data.expDate
-            org.subscription.cost = data.cost
+            //org.subscription.expDate = data.expDate
+            //org.subscription.cost = data.cost
 
         }
 
