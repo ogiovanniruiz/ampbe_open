@@ -8,9 +8,9 @@ const appendGeoids = async() => {
 
         var batch = true
 
-        var precinctMatch = true
+        var precinctMatch = false
 
-        /*
+        
         if(!batch){
                     
             var houseHolds = await HouseHold.aggregate([{$match: {'blockgroupID': { $exists: false }}}]);
@@ -36,13 +36,13 @@ const appendGeoids = async() => {
                 }
             
             }
-        }*/
+        }
 
-        /*
+        
         if(batch){
 
    
-        var blockgroups = await Blockgroup.find({'properties.county.name': "LOS ANGELES"});
+        var blockgroups = await Blockgroup.find({'properties.county.name': "SAN BERNARDINO"});
 
         for(var i = 0; i < blockgroups.length; i++){
             console.log(blockgroups[i].properties.geoid)
@@ -86,11 +86,11 @@ const appendGeoids = async() => {
 
         return {msg: "DONZO"}
 
-    }*/
+    }
 
     if(precinctMatch){
 
-        var precincts = await Precinct.find({'properties.county.name': "LOS ANGELES"});
+        var precincts = await Precinct.find({'properties.county.name': "RIVERSIDE"});
 
         for(var i = 0; i < precincts.length; i++){
 

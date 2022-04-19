@@ -46,6 +46,7 @@ const getOrgReport = async(detail) => {
                         }
                     }
                 });
+
                 POSITIVE.push({
                     [script.questions[i]._id]: {
                         '$size': {
@@ -221,8 +222,8 @@ const getOrgReport = async(detail) => {
         ];
 
         //console.log(JSON.stringify(agg, null, 2))
-        var report = await OutreachReport.aggregate(agg).allowDiskUse(true);
-        return report;
+        return await OutreachReport.aggregate(agg).allowDiskUse(true);
+
     } catch(e){
 
         throw new Error(e.message)

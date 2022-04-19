@@ -11,6 +11,7 @@ var PolySchema = new Schema(
                   userID: {type: String},
                   date: {type: Date, default: Date.now},
                   demographics: {
+                    total_hh: {type: Number},
                     totalPop: {type: Number}, 
                     percentIndig: {type: Number}, 
                     percentWhite: {type: Number},

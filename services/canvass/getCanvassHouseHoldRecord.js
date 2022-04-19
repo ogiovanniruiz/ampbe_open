@@ -8,6 +8,7 @@ const getCanvassHouseHoldRecord = async(details) => {
                       activityID: details.activityID, 
                      'houseHold._id.streetNum': details.houseHoldID.streetNum, 
                      'houseHold._id.street': details.houseHoldID.street
+                     
                     }
             },
             {$group: {_id: {location:'$houseHold.location'},

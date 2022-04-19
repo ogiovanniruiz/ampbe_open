@@ -71,7 +71,10 @@ const convertQueriesIndividual = async(queries) =>{
         }else if(field === 'orgRegDate'){
             return {'resident.regDates.0': {[operator]: new Date(value)}}
 
-        }else{
+        }else if (field === 'zips'){
+            return {'_id.zip': {$in: value}}
+        }
+        else{
             var newField = "resident." + field
             let mongoDBQuery;
             mongoDBQuery = { [newField]: { [operator]: value } };

@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 var HHDistrictsSchema = new Schema(
     {
         countyID: {type: String},
+        bosID: {type: String},
         citywideID: {type: String},
         citywardID: {type: String},
         assemblyID: {type: String},

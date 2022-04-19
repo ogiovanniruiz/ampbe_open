@@ -32,6 +32,8 @@ const submitCanvassScriptResponse = async(details) => {
         var houseHoldID = {}
                                             
         if(details.activity.idByHousehold === 'HOUSEHOLD' || details.activity.idByHousehold === 'INDIVIDUAL'){
+
+            console.log(details.houseHoldID)
                                             
             houseHoldID = {
                 streetNum: details.houseHoldID.streetNum,

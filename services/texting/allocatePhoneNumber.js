@@ -14,6 +14,11 @@ const allocatePhoneNumber = async(data) => {
                            userFullName: userFullName
                            }
 
+        for(var i = 0; i < activity.textMetaData.activityPhonenums.length; i++){
+            if(activity.textMetaData.activityPhonenums[i].number === data.phoneNumber){
+                return activity        
+            }
+        }
         activity.textMetaData.activityPhonenums.push(phoneNumber)
         return activity.save()
 

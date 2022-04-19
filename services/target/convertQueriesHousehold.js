@@ -73,6 +73,8 @@ const convertQueriesHousehold = async(queries) =>{
         }else if(field === 'orgRegDate'){
 
             return {'residents.regDates.0': {[operator]: new Date(value)}}
+        } else if (field === 'zips'){
+            return {'_id.zip': {$in: value}}
         }
         else{
             var newField = 'residents.' + field

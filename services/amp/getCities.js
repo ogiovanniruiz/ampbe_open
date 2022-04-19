@@ -5,17 +5,17 @@ const getCities = async(boundary) => {
         var filter = {};
         var filterSet = [];
 
-        if(boundary[0].properties.districtType && boundary[0].properties.districtType !== 'NONE'){
+        //if(boundary[0].properties.districtType && boundary[0].properties.districtType !== 'NONE'){
 
-            var parameter = await "districts." + boundary[0].properties.districtType.toLowerCase() + "ID"
+            var parameter = "districts." + boundary[0].properties.districtType.toLowerCase() + "ID"
             for(var i = 0; i < boundary.length; i++){
-                await filterSet.push(boundary[i].properties.identifier);
+                filterSet.push(boundary[i].properties.identifier);
             }
-            filter[parameter] = await { $in: filterSet}
+            filter[parameter] = { $in: filterSet}
 
-        }else{
-            filter = {_id : { $exists: true }}
-        }
+        //}else{
+            //filter = {_id : { $exists: true }}
+        //}
 
         return await HouseHold.distinct('_id.city', filter)
 

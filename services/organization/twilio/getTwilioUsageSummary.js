@@ -6,6 +6,7 @@ var TextbankContactHistory = require('../../../models/activities/textbank/textba
 const getTwilioUsageSummary = async(detail) => {
     try { 
         var org = await Organization.findById(detail.orgID)
+        //console.log(org.name)
         const client = require('twilio')(org.twilioAccount.sid, org.twilioAccount.authToken);
 
         var rf = 0
@@ -20,7 +21,16 @@ const getTwilioUsageSummary = async(detail) => {
                     data.smsCount = record.count
                 }
                 if(record.category === 'phonenumbers'){
+                    //console.log(record)
                     data.phonenums = record.count
+                }
+
+                if(record.category === 'calls'){
+                    data.calls = record.count
+                }
+
+                if(record.category === 'calls-client'){
+                    data.clientCount = record.count
                 }
                 if(record.category === 'calls-outbound'){
                     data.callCount = record.count

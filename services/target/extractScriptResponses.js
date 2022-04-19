@@ -9,21 +9,27 @@ const extractScriptResponses = async(queries, campaignID, orgID) =>{
     }
 
     for(var i = 0; i < queries.rules.length; i++){
+
         queries.rules[i].personIDs = [];
 
         if(queries.rules[i].field === 'scripts' && queries.rules[i].value){
-            var outReachReport = await OutReachReport.find({orgID: orgID, scriptResponse: {$exists: true}})
+            
+
+            var scriptIDs = []
+
+            for(var l = 0; l < queries.rules[i].value.length; l++){
+                scriptIDs.push(queries.rules[i].value[l]._id)
+            }
+
+            var outReachReport = await OutReachReport.find({orgID: orgID, scriptResponse: {$exists: true}, scriptID: {$in: scriptIDs}})
 
             for(var k = 0; k < queries.rules[i].value.length; k++){
 
-                var scriptID = queries.rules[i].value[k]._id;
                 var question = queries.rules[i].value[k].question;
                 var response = queries.rules[i].value[k].response;
 
                 var targetOutReachEntries = outReachReport.filter(
                     outReachEntry => 
-                        //outReachEntry['scriptResponse'] &&
-                        outReachEntry['scriptID'] === scriptID &&
                         outReachEntry['scriptResponse']['questionResponses'] &&
                         outReachEntry['scriptResponse']['questionResponses'].some(
                             questionResponse => questionResponse.response === response &&
@@ -33,7 +39,6 @@ const extractScriptResponses = async(queries, campaignID, orgID) =>{
                 
                 for(var j = 0; j < targetOutReachEntries.length; j++ ){
                     queries.rules[i].personIDs.push(targetOutReachEntries[j].personID)
-                    console.log(targetOutReachEntries[j].personID)
                 }
 
             }
@@ -47,7 +52,6 @@ const extractScriptResponses = async(queries, campaignID, orgID) =>{
 
                 var targetOutReachEntries = outReachReport.filter(
                     outReachEntry => 
-                        //outReachEntry['nonResponse'] &&
                         outReachEntry['nonResponse']['nonResponseSetID'] === nonResponseSetID &&
                         outReachEntry['nonResponse']['nonResponseType'] === nonResponseType
                 );
@@ -75,18 +79,15 @@ const extractScriptResponses = async(queries, campaignID, orgID) =>{
 
         if(queries.rules[i].field === 'precincts'){
 
-            console.log("HERE")
-
             const aggPrec = [
                 {'$match': {'properties.precinctID': {'$in': queries.rules[i].value}}},
                 {'$group': {'_id': null, 'targets': {'$addToSet': {'$arrayElemAt': ['$geometry.coordinates', 0]}}}}
             ];
 
             var geometry = await Precincts.aggregate(aggPrec);
-            console.log(geometry[0])
-    
+
             queries.rules[i].geometry.coordinates = await geometry[0].targets;
-            console.log("GERE")
+
 
         }
 

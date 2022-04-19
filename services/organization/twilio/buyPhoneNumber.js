@@ -29,7 +29,8 @@ const buyPhoneNumber = async(detail) => {
             }
 
             var newTwilioNum = await client.incomingPhoneNumbers(numberSID)
-                .update({smsUrl: sms_url, voiceUrl: voice_url})
+                .update({smsUrl: sms_url//,voiceUrl: voice_url
+                })
                 .then(incoming_phone_number => {return incoming_phone_number})
                 .catch(e => {
                     statusMsg = e.message

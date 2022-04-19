@@ -1,5 +1,6 @@
 var Poly = require('../../models/targets/poly');
 var Campaign = require('../../models/campaigns/campaign')
+var HouseHold = require('../../models/houseHolds/houseHold')
 
 const createPolygon = async(polyDetails) => {
     try {
@@ -22,6 +23,10 @@ const createPolygon = async(polyDetails) => {
                 return {msg: "Polygon within this region and campaign already exists."}
             }
         }
+
+
+        //var num_hh = await HouseHold.countDocuments({location: {$geoIntersects: { $geometry: polyDetails.geometry}}})
+        //polyDetails.properties.demographics.total_hh = num_hh
 
         var newCreatedPoly  = new Poly(polyDetails);
         newCreatedPoly.save();

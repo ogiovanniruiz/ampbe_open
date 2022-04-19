@@ -11,10 +11,10 @@ var Districts = require('../../models/campaigns/districts');
 
 
 const generateTargetResults = async(activity) => {
-    try { 
+    try {
+        
         var target = await Target.findOne({_id: activity.targetID })
         var campaign = await Campaign.findOne({campaignID: activity.campaignID})
-
         var excludedObjects = []
 
         var passed = {};
@@ -31,10 +31,19 @@ const generateTargetResults = async(activity) => {
         }
 
         if(activity.activityType === 'Texting' || activity.activityType === 'Phonebank' ){
-            var outReachReport = await OutReachReport.find({campaignID: activity.campaignID, orgID: activity.orgIDs[0], $or: [{'nonResponse.nonResponseType': 'INVALIDPHONE'}, {'nonResponse.nonResponseType': 'DNC'}]})
+            var exclude = await OutReachReport.find({orgID: activity.orgIDs[0], campaignID: activity.campaignID, nonResponse: {$exists: true},  $or: [{'nonResponse.nonResponseType': 'INVALIDPHONE'}, {'nonResponse.nonResponseType': 'DNC'}]})
 
-            for(var i = 0; i < outReachReport.length; i++){
-                excludedObjects.push({$ne: ["$$residents._id", outReachReport[i].personID]})
+            for(var i = 0; i < exclude.length; i++){
+                excludedObjects.push({$ne: ["$$residents.personID", exclude[i].personID]})
+            }
+        }
+
+        if(activity.activityType === 'Canvass'){
+
+            var exclude = await OutReachReport.find({orgID: activity.orgIDs[0], $or: [{'nonResponse.nonResponseType': 'INVALIDADDRESS'}, {'nonResponse.nonResponseType': 'DNC'}]})
+
+            for(var i = 0; i < exclude.length; i++){
+                excludedObjects.push({$ne: ["$$residents.personID", exclude[i].personID]})
             }
         }
 
@@ -44,15 +53,17 @@ const generateTargetResults = async(activity) => {
         if(target.properties.queries){
 
             var queries = await ExtractScriptResponses.extractScriptResponses(target.properties.queries, activity.campaignID, activity.orgIDs[0])
+            
             if(target.properties.idByHousehold === 'HOUSEHOLD'){
                 filter = await convertQueriesHousehold.convertQueriesHousehold(queries)
             } else if (target.properties.idByHousehold === 'INDIVIDUAL'){
                 filter = await convertQueriesIndividual.convertQueriesIndividual(queries)
             } else{
                 filter = await convertQueriesMembership.convertQueriesMembership(queries)
-            }      
+            } 
         }
- 
+
+
         // Add district type
         var districtType = {};
         var districtTypeSet = [];
@@ -64,7 +75,6 @@ const generateTargetResults = async(activity) => {
             districtTypeSet.push(id);
         }
         districtType[districtTypeParam] = {$in: districtTypeSet}
-      
 
         // Remove empty phone numbers and landlines
         var phoneFilter = {$match: {}}
@@ -90,7 +100,6 @@ const generateTargetResults = async(activity) => {
 
         //exclusion filter
         var exclusionFilter  = {$match: {}}
-        var excludedObjects = []
 
         if(excludedObjects.length > 0){
             exclusionFilter = {$project:{
@@ -120,7 +129,7 @@ const generateTargetResults = async(activity) => {
                 phoneFilter,
                 exclusionFilter,
                 {$match: { 'residents.0': { $exists: true } }},
-                {$limit : 500000},
+                {$limit : 100000},
                 
                 {$project: {
                     _id: 0,
@@ -178,7 +187,8 @@ const generateTargetResults = async(activity) => {
                         hhParties: {$first: '$hhParties'},
                         districts: {$first: '$districts'},
                         blockgroupID: {$first: '$blockgroupID'},
-                        precinctID: {$first: '$precinctID'}
+                        precinctID: {$first: '$precinctID'},
+                        //primary_zip: {$first: '$primary_zip'}
                     }
                 },
                 phoneFilter,
@@ -275,6 +285,9 @@ const generateTargetResults = async(activity) => {
                 }},
             ]
             //console.log(JSON.stringify(agg, null, 2))
+
+            console.log(agg)
+
             return {'agg': agg, 'idByHousehold': target.properties.idByHousehold}
         }
         

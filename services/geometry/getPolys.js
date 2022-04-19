@@ -10,7 +10,7 @@ const getPolys = async(detail) => {
         var features = []
 
         for (var i = 0; i < campaign.orgIDs.length; i++){
-            var polys = await Poly.find({'properties.orgID': campaign.orgIDs[i]})
+            var polys = await Poly.find({'properties.orgID': campaign.orgIDs[i], 'properties.campaignID': detail.campaignID})
             var org = await Organization.findById(campaign.orgIDs[i])
             features.push({orgID: campaign.orgIDs[i], polys: polys, orgName: org.name})
         }

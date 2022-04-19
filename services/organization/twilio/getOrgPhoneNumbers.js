@@ -21,6 +21,9 @@ const getOrgPhoneNumbers = async(detail) => {
         
         }
 
+        //console.log(org)
+        //console.log(detail.campaignID)
+
         if(org.twilioAccount.sid && org.twilioAccount.authToken){
             const client = require('twilio')(org.twilioAccount.sid, org.twilioAccount.authToken);
             return await client.incomingPhoneNumbers.list({limit: 20}).then(incomingPhoneNumbers => {return incomingPhoneNumbers});

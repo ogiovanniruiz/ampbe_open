@@ -10,6 +10,8 @@ const massGeocodeVoters= async() => {
         
         var index = 0
 
+        var batch_size = 100
+
         async.forever(
 
             async function(next) {
@@ -22,7 +24,7 @@ const massGeocodeVoters= async() => {
                         }
                     }
                 }, {
-                    '$limit': 500
+                    '$limit': batch_size
                 }
             ];
     
@@ -87,7 +89,7 @@ const massGeocodeVoters= async() => {
                     console.error(err);
                 });
 
-                index = index + 500
+                index = index + batch_size
                 console.log("Geocoded: ", index)
     
     

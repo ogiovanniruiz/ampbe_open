@@ -25,8 +25,9 @@ var HouseHoldSchema = new Schema(
     hhParties: [{type: String}],
     blockgroupID: {type: String},
     districts: HHDistricts.schema,
-    precinctID: {type: String}
-  },{ collection : 'households2021' }
+    precinctID: {type: String},
+    //primary_zip: {type: String}
+  },{ collection : 'households2022' }
 );
 
 //Export model

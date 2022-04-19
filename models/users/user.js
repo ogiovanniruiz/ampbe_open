@@ -11,6 +11,7 @@ var UserSchema = new Schema(
     dev: {type: Boolean, default: false},
     loginEmail: {type: String},
     orgPermissions: [OrgPermissions.schema],
+    homeOrgID: {type: String},
     dataManager: [{type: Number}],
     userAgreements: [{version: String, date: {type: Date, default: Date.now}}],
     oauths: [{type: String, enum:["https://accounts.google.com", 'facebook']}],

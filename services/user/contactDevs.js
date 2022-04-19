@@ -1,11 +1,15 @@
 var nodeMailer = require('nodemailer');
+var Organization = require('../../models/organizations/organization')
+
 
 const contactDevs = async(data) => {
     try { 
 
         var contactEmail = process.env.contactEmail
         var contactEmailPassword = process.env.contactEmailPassword
-        
+
+        var org = await Organization.findById(data.orgID)
+
         let transporter = nodeMailer.createTransport({
             host: 'smtp.gmail.com',
             port: 465,
@@ -22,6 +26,7 @@ const contactDevs = async(data) => {
             html:   "First Name: " + data.user.name.firstName + "<br>"
                   + "Last Name: " + data.user.name.lastName + "<br>"
                   + "Login Email: " + data.user.loginEmail + "<br>"
+                  + "Organization: " + org.name + "<br>"
                   + "Message: " + data.message + "<br>"
         };
     
