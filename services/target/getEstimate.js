@@ -27,6 +27,8 @@ const getEstimate = async(estimate) => {
             }
         }
 
+        console.log(filter)
+
         var districtType = {};
         var districtTypeSet = [];
 

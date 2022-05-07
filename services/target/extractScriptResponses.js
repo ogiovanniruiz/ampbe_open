@@ -44,20 +44,35 @@ const extractScriptResponses = async(queries, campaignID, orgID) =>{
             }
         }
 
+        //console.log(queries)
+
         if(queries.rules[i].field === 'nonResponseSets' && queries.rules[i].value){
-            var outReachReport = await OutReachReport.find({orgID: orgID, nonResponse: {$exists: true}})
+
+            var nonresponseSetIDs = []
+
+            for(var l = 0; l < queries.rules[i].value.length; l++){
+                nonresponseSetIDs.push(queries.rules[i].value[l]._id)
+            }
+
+            var nonResponses = []
+
+            for(var l = 0; l < queries.rules[i].value.length; l++){
+                nonResponses.push(queries.rules[i].value[l].nonResponse)
+            }
+
+
+            var outReachReport = await OutReachReport.find({orgID: orgID, 
+                                                            nonResponse: {$exists: true}, 
+                                                            'nonResponse.nonResponseSetID': {$in: nonresponseSetIDs},
+                                                            'nonResponse.nonResponse': {$in: nonResponses}
+                                                        
+                                                        })
+            
+
             for(var k = 0; k < queries.rules[i].value.length; k++){
-                var nonResponseSetID = queries.rules[i].value[k]._id;
-                var nonResponseType = queries.rules[i].value[k].nonResponseType;
 
-                var targetOutReachEntries = outReachReport.filter(
-                    outReachEntry => 
-                        outReachEntry['nonResponse']['nonResponseSetID'] === nonResponseSetID &&
-                        outReachEntry['nonResponse']['nonResponseType'] === nonResponseType
-                );
-
-                for(var j = 0; j < targetOutReachEntries.length; j++ ){
-                    queries.rules[i].personIDs.push(targetOutReachEntries[j].personID)
+                for(var j = 0; j < outReachReport.length; j++ ){
+                    queries.rules[i].personIDs.push(outReachReport[j].personID)
                  }
             }
         }

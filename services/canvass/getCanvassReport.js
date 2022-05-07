@@ -33,7 +33,7 @@ const getCanvassReport = async(detail) => {
 
         if (script.questions) {
             for(var i = 0; i < script.questions.length; i++){
-                await VERYPOSITIVE.push({
+                VERYPOSITIVE.push({
                     [script.questions[i]._id]: {
                         '$size': {
                             '$filter': {
@@ -49,7 +49,7 @@ const getCanvassReport = async(detail) => {
                     }
                 })
 
-                await POSITIVE.push({
+                POSITIVE.push({
                     [script.questions[i]._id]: {
                         '$size': {
                             '$filter': {
@@ -65,7 +65,7 @@ const getCanvassReport = async(detail) => {
                     }
                 })
 
-                await NEUTRAL.push({
+                NEUTRAL.push({
                     [script.questions[i]._id]: {
                         '$size': {
                             '$filter': {
@@ -81,7 +81,7 @@ const getCanvassReport = async(detail) => {
                     }
                 })
 
-                await NEGATIVE.push({
+                NEGATIVE.push({
                     [script.questions[i]._id]: {
                         '$size': {
                             '$filter': {
@@ -97,7 +97,7 @@ const getCanvassReport = async(detail) => {
                     }
                 })
 
-                await VERYNEGATIVE.push({
+                VERYNEGATIVE.push({
                     [script.questions[i]._id]: {
                         '$size': {
                             '$filter': {
@@ -140,42 +140,19 @@ const getCanvassReport = async(detail) => {
                         '$match': {
                             'scriptResponseTimePST': datePicker ? datePicker : { $exists: true },
                         }
-                    }, {
+                    },
+                    {
                         '$group': {
                             '_id': '$userID',
                             'residents': {
                                 '$push': '$$ROOT'
-                            },
-                            'status': {
-                                '$push': '$status',
-                            },
-                            'lengthOfCall': {
-                                '$push': '$lengthOfCall',
                             }
                         }
-                    }, {
+                    },                    
+                    {
                         '$project': {
                             '_id': 1,
-                            'called': {
-                                '$size': '$status'
-                            },
-                            'avgCallLength': {
-                                '$trunc':[{
-                                    '$avg':'$lengthOfCall'
-                                },4]
-                            },
-                            'successful': {
-                                '$size': {
-                                    '$filter': {
-                                        'input': '$status',
-                                        'cond': {
-                                            '$eq': [
-                                                '$$this', 'completed'
-                                            ]
-                                        }
-                                    }
-                                }
-                            },
+                            'residents': 1,
                             VERYPOSITIVE,
                             POSITIVE,
                             NEUTRAL,
@@ -227,11 +204,27 @@ const getCanvassReport = async(detail) => {
                                         }
                                     }
                                 }
-                            }
+                            },                        
                         }
-                    }
+                    },
+                    {
+                        '$project': {
+                            '_id': 1,
+                            VERYPOSITIVE: 1,
+                            POSITIVE: 1,
+                            NEUTRAL: 1,
+                            NEGATIVE: 1,
+                            VERYNEGATIVE: 1,
+                            IMP: 1,
+                            INVALIDADDRESS: 1,
+                            DNC: 1,
+                            NONRESPONSE: 1                       
+                        }
+                    },
 
         ];
+
+        
 
         var report = await CanvassContactHistory.aggregate(agg).allowDiskUse(true);
 

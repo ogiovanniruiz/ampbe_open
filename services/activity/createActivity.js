@@ -59,7 +59,6 @@ const createActivity = async(details) => {
             }
         }
 
-
         newActivity.idByHousehold = query['idByHousehold'];
 
         return newActivity.save()

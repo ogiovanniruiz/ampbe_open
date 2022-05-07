@@ -12,8 +12,10 @@ const submitCanvassNonResponse = async(details) => {
                                                                campaignID: details.activity.campaignID,
                                                                activityID: details.activity._id,
                                                                userName: details.user.name,
-                                                               nonResponse: {contactedBy: details.userID, nonResponse: details.nonResponse, nonResponseType: details.nonResponseType, nonResponseSetID: details.nonResponseSetID} ,    
-                                                               //comp: true
+                                                               nonResponse: {contactedBy: details.userID, 
+                                                                            nonResponse: details.nonResponse, 
+                                                                            nonResponseType: details.nonResponseType, 
+                                                                            nonResponseSetID: details.nonResponseSetID} ,    
                                                             })
 
         var person = await People.findOne({'resident.personID': details.personID})
@@ -62,23 +64,16 @@ const submitCanvassNonResponse = async(details) => {
         ccHHRecord.numResContacted = ccHHRecord.numResContacted + 1;
 
         if(details.activity.idByHousehold === 'HOUSEHOLD'){
-            
-        }
-        else{
-
+            ccHHRecord.passed = true;
+        }else{
+            if(ccHHRecord.numResContacted >= details.hhSize){ //|| ccHHRecord.residentStatus.length >= details.hhSize){
+                ccHHRecord.passed = true;
+            } 
         }
         
         if(details.nonResponseType == "DNC" || details.nonResponseType === "INVALIDADDRESS"){
-            //ccHHRecord.residentStatus.push("COMPLETE");
             ccHHRecord.complete = true;
         }
-
-        if(ccHHRecord.numResContacted >= details.hhSize){ //|| ccHHRecord.residentStatus.length >= details.hhSize){
-            ccHHRecord.passed = true;
-            //if(details.nonResponseType == "DNC" || details.nonResponseType === "INVALIDADDRESS"){
-            //    ccHHRecord.complete = true;
-            //}
-        } 
 
         return await ccHHRecord.save()
 
