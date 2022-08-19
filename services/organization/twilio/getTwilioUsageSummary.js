@@ -6,41 +6,41 @@ var TextbankContactHistory = require('../../../models/activities/textbank/textba
 const getTwilioUsageSummary = async(detail) => {
     try { 
         var org = await Organization.findById(detail.orgID)
-        //console.log(org.name)
+
         const client = require('twilio')(org.twilioAccount.sid, org.twilioAccount.authToken);
+        console.log(org.twilioAccount)
 
         var rf = 0
         var data = {}
 
         return new Promise(function(resolve, reject){
             client.usage.records.each( record =>{
+                //console.log(record)
                 if(record.category === 'mms'){
-                    data.mmsCount = record.count
+                    data.mmsCount = record.usage
                 }
                 if(record.category === 'sms'){
-                    data.smsCount = record.count
+                    
+                    data.smsCount = record.usage
                 }
                 if(record.category === 'phonenumbers'){
-                    //console.log(record)
                     data.phonenums = record.count
                 }
 
-                if(record.category === 'calls'){
-                    data.calls = record.count
-                }
+                //if(record.category === 'calls'){
+                //    data.calls = record.count
+                //}
 
                 if(record.category === 'calls-client'){
                     data.clientCount = record.count
                 }
                 if(record.category === 'calls-outbound'){
+                    console.log(record)
                     data.callCount = record.count
                     resolve(data)
                 }
             })
         })
-
-        var numberContacts = 0 //await TextbankContactHistory.countDocuments({orgID: detail.orgID})
-        return {numContacts: rf}
     
     } catch(e){
         throw new Error(e.message)

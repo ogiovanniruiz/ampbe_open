@@ -1,4 +1,8 @@
 var OutreachReport = require('../../models/campaigns/outreachReport')
+var Activity = require('../../models/activities/activity')
+var pbcontacthistory = require('../../models/activities/phonebank/phonebankContactHistory')
+var ccontacthistory = require('../../models/activities/canvass/canvassContactHistory')
+var tbcontacthistory = require('../../models/activities/textbank/textbankContactHistory')
 
 const getScriptReport = async(detail) => {
     try {
@@ -25,106 +29,61 @@ const getScriptReport = async(detail) => {
             org = detail.orgID;
         }
 
-        var scriptArray = await detail.data.selectedScript;
+        var scriptIDArray = detail.data.selectedScript.map(x => x._id);
+        var activityIDs = await Activity.find({scriptID: {$in: scriptIDArray}}, {_id: 1, scriptID: 1})
 
-        var VERYPOSITIVE = [];
-        var POSITIVE = [];
-        var NEUTRAL = [];
-        var NEGATIVE = [];
-        var VERYNEGATIVE = [];
+        var activityIDs = await Activity.aggregate([
+            {$match: {scriptID: {$in: scriptIDArray}}}, 
+            {$group: {_id: "$scriptID", 
+                      activityID: {$push: "$_id"}}},
+            {$project: {_id: 1, activityID: 1}}
+        ] )
 
-        if (scriptArray.length) {
-            for(var h = 0; h < scriptArray.length; h++) {
-                var script = scriptArray[h];
+        var attempts = []
 
-                if (script.questions) {
-                    for(var i = 0; i < script.questions.length; i++){
-                        VERYPOSITIVE.push({
-                            [script.questions[i]._id]: {
-                                '$size': {
-                                    '$filter': {
-                                        'input': '$outReachEntry.scriptResponse',
-                                        'cond': {
-                                            '$and': [
-                                                { '$eq': ['$$this.questionResponses.idType', 'VERYPOSITIVE'] },
-                                                { '$eq': ['$$this.questionResponses.question', script.questions[i].question]}
-                                            ]
-                                        }
-                                    }
-                                }
-                            }
-                        });
-                        POSITIVE.push({
-                            [script.questions[i]._id]: {
-                                '$size': {
-                                    '$filter': {
-                                        'input': '$outReachEntry.scriptResponse',
-                                        'cond': {
-                                            '$and': [
-                                                { '$eq': ['$$this.questionResponses.idType', 'POSITIVE'] },
-                                                { '$eq': ['$$this.questionResponses.question', script.questions[i].question]}
-                                            ]
-                                        }
-                                    }
-                                }
-                            }
-                        });
-                        NEUTRAL.push({
-                            [script.questions[i]._id]: {
-                                '$size': {
-                                    '$filter': {
-                                        'input': '$outReachEntry.scriptResponse',
-                                        'cond': {
-                                            '$and': [
-                                                { '$eq': ['$$this.questionResponses.idType', 'NEUTRAL'] },
-                                                { '$eq': ['$$this.questionResponses.question', script.questions[i].question]}
-                                            ]
-                                        }
-                                    }
-                                }
-                            }
-                        });
-                        NEGATIVE.push({
-                            [script.questions[i]._id]: {
-                                '$size': {
-                                    '$filter': {
-                                        'input': '$outReachEntry.scriptResponse',
-                                        'cond': {
-                                            '$and': [
-                                                { '$eq': ['$$this.questionResponses.idType', 'NEGATIVE'] },
-                                                { '$eq': ['$$this.questionResponses.question', script.questions[i].question]}
-                                            ]
-                                        }
-                                    }
-                                }
-                            }
-                        });
-                        VERYNEGATIVE.push({
-                            [script.questions[i]._id]: {
-                                '$size': {
-                                    '$filter': {
-                                        'input': '$outReachEntry.scriptResponse',
-                                        'cond': {
-                                            '$and': [
-                                                { '$eq': ['$$this.questionResponses.idType', 'VERYNEGATIVE'] },
-                                                { '$eq': ['$$this.questionResponses.question', script.questions[i].question]}
-                                            ]
-                                        }
-                                    }
-                                }
-                            }
-                        });
-                    }
-                }
+        for(var i = 0; i < activityIDs.length; i++){
+
+            var totalRecords = 0
+            var pbRecords = 0
+            var cRecords = 0
+            var tbRecords = 0
+
+            var activityAgg = {activityID: {$in: activityIDs[i].activityID},
+            'orgID': org ? org : { $exists: true },
+            '$or': [{'textInitDate': datePicker ? datePicker : { $exists: true }},
+                    {'callInitTime': datePicker ? datePicker : { $exists: true }},
+                    {'scriptResponse.date': datePicker ? datePicker : { $exists: true }},
+                    {'nonResponse.date': datePicker ? datePicker : { $exists: true }},
+                    //{'date': datePicker ? datePicker : { $exists: true }}
+                ]
+
+        }
+
+            if(detail.data.selectedActivityType === 'Phonebank' || detail.data.selectedActivityType === 'All' ){
+                pbRecords = await pbcontacthistory.countDocuments(activityAgg)
             }
+
+            if(detail.data.selectedActivityType === 'Canvass' || detail.data.selectedActivityType === 'All' ){
+                cRecords = await ccontacthistory.countDocuments(activityAgg)
+            }
+
+            if(detail.data.selectedActivityType === 'Texting' || detail.data.selectedActivityType === 'All' ){
+                tbRecords = await tbcontacthistory.countDocuments(activityAgg)
+            }
+
+            totalRecords = pbRecords + cRecords + tbRecords
+
+            attempts.push({scriptID: activityIDs[i]._id, attempts: totalRecords})
+
         }
 
         const agg = [
             {
                 '$match': {
+                    'scriptResponse': {$exists: true},
                     'campaignID': detail.campaignID,
                     'activityType': activityType ? activityType : { $exists: true },
-                    'orgID': org ? org : { $exists: true },
+                    'orgID': org ? org : { $exists: true }, 
                 }
             }, {
                 '$group': {
@@ -132,11 +91,6 @@ const getScriptReport = async(detail) => {
                     'outReachReport': {
                         '$last': '$$ROOT'
                     }
-                }
-            }, {
-                '$unwind': {
-                    'path': '$outReachReport.scriptResponse.questionResponses',
-                    'preserveNullAndEmptyArrays': true
                 }
             }, {
                 '$addFields': {
@@ -155,22 +109,51 @@ const getScriptReport = async(detail) => {
             }, {
                 '$group': {
                     '_id': '$outReachReport.scriptID',
-                    'outReachEntry': {
-                        '$push': '$outReachReport'
+                    'ids': {$sum: 1}
+                }
+            }, 
+            
+
+        ];
+
+        var ids = await OutreachReport.aggregate(agg).allowDiskUse(true);
+
+        var dncs = await OutreachReport.aggregate( [{              '$match': {
+            'nonResponse': {$exists: true},
+            'nonResponse.nonResponseType': "DNC",
+            'campaignID': detail.campaignID,
+            'activityType': activityType ? activityType : { $exists: true },
+            'orgID': org ? org : { $exists: true }, 
+            //'date': datePicker ? datePicker : { $exists: true }
+        }}
+        , {
+            '$addFields': {
+                'scriptResponseTimePST': {
+                    '$dateToString': {
+                        'format': '%Y-%m-%d',
+                        'date': {'$cond': {if: '$scriptResponse.date', then: '$scriptResponse.date', else: '$nonResponse.date'}},
+                        'timezone': 'America/Los_Angeles'
                     }
                 }
-            }, {
-                '$project': {
-                    '_id': 1,
-                    VERYPOSITIVE,
-                    POSITIVE,
-                    NEUTRAL,
-                    NEGATIVE,
-                    VERYNEGATIVE
-                }
             }
-        ];
-        return await OutreachReport.aggregate(agg).allowDiskUse(true);
+        }, {
+            '$match': {
+                'scriptResponseTimePST': datePicker ? datePicker : { $exists: true },
+            }
+        } 
+        
+        
+        , {
+            '$group': {
+                '_id': '$scriptID',
+                'dncs': {$sum: 1}
+            }
+        }, ])
+
+        
+
+        return {ids: ids, attempts: attempts, dncs: dncs}
+
 
     } catch(e){
         throw new Error(e.message)

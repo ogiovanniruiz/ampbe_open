@@ -18,6 +18,7 @@ var CanvassContactHistorySchema = new Schema({
     person: Person.schema,
     complete: {type: Boolean, default: false},
     member: {type: Boolean, default: false},
+    date: {type: Date, default: Date.now}, 
 }
 );
 

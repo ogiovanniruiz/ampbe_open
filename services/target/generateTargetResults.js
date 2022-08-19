@@ -69,7 +69,9 @@ const generateTargetResults = async(activity) => {
         var districtTypeSet = [];
 
         var boundary = await Districts.find({'properties.identifier': {$in: campaign.boundaryIDs}})
+        
         var districtTypeParam = "districts." + boundary[0].properties.districtType.toLowerCase() + "ID"
+        console.log(districtTypeParam )
         for(var i = 0; i < boundary.length; i++){
             var id = boundary[i].properties.identifier
             districtTypeSet.push(id);
@@ -285,8 +287,6 @@ const generateTargetResults = async(activity) => {
                 }},
             ]
             //console.log(JSON.stringify(agg, null, 2))
-
-            console.log(agg)
 
             return {'agg': agg, 'idByHousehold': target.properties.idByHousehold}
         }

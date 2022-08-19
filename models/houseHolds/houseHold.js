@@ -27,7 +27,9 @@ var HouseHoldSchema = new Schema(
     districts: HHDistricts.schema,
     precinctID: {type: String},
     //primary_zip: {type: String}
-  },{ collection : 'households2022' }
+  },
+
+  { collection : 'households2022' }
 );
 
 //Export model

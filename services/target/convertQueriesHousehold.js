@@ -31,6 +31,7 @@ const convertQueriesHousehold = async(queries) =>{
             if(value === 'mixed'){
                 return {'hhParties.1': {$exists: true}}
             }else{
+                //return {$and: [{hhParties: value}]} //THIS NEEDS TO BE SPECIFIED
                 return {$and: [{hhParties: value}, {'hhParties.1': {$exists: false}}]}
             }
 

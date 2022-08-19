@@ -6,11 +6,11 @@ const appendGeoids = async() => {
     try { 
         console.log("Starting to Append Geoids...")
 
-        var batch = true
+        var batch = false
 
-        var precinctMatch = false
+        var precinctMatch = true
 
-        
+        /*
         if(!batch){
                     
             var houseHolds = await HouseHold.aggregate([{$match: {'blockgroupID': { $exists: false }}}]);
@@ -36,13 +36,13 @@ const appendGeoids = async() => {
                 }
             
             }
-        }
+        }*/
 
         
         if(batch){
 
    
-        var blockgroups = await Blockgroup.find({'properties.county.name': "SAN BERNARDINO"});
+        var blockgroups = await Blockgroup.find({'properties.county.name': "SOLANO"});
 
         for(var i = 0; i < blockgroups.length; i++){
             console.log(blockgroups[i].properties.geoid)
@@ -90,7 +90,7 @@ const appendGeoids = async() => {
 
     if(precinctMatch){
 
-        var precincts = await Precinct.find({'properties.county.name': "RIVERSIDE"});
+        var precincts = await Precinct.find({'properties.county.name': "SOLANO"});
 
         for(var i = 0; i < precincts.length; i++){
 

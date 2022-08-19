@@ -27,7 +27,7 @@ const getOrgReport = async(detail) => {
         var NEUTRAL = [];
         var NEGATIVE = [];
         var VERYNEGATIVE = [];
-
+        
         var script = await detail.data.selectedScript;
         if (script.questions) {
             for(var i = 0; i < script.questions.length; i++){
@@ -116,6 +116,7 @@ const getOrgReport = async(detail) => {
                     'campaignID': detail.campaignID,
                     'activityType': activityType ? activityType : { $exists: true },
                     'scriptID': detail.data.selectedScript._id,
+                    'scriptResponse': {$exists: true}
                 }
             },
             {
@@ -125,23 +126,25 @@ const getOrgReport = async(detail) => {
                     campaignID: 0,
                     activityType: 0,
                     member: 0,
-
-                    
                 }
-            } ,
+            },
             {
                 '$group': {
-                    '_id': {'personID':'$personID', 'orgID':'$orgID'},
+                   '_id': {'personID':'$personID', 'orgID':'$orgID'},
                     'outReachReport': {
                         '$last': '$$ROOT'
                     }
                 }
-            }, {
+            }, 
+            
+            {
                 '$unwind': {
                     'path': '$outReachReport.scriptResponse.questionResponses',
                     'preserveNullAndEmptyArrays': true
                 }
-            }, {
+            }, 
+            
+            {
                 '$addFields': {
                     'scriptResponseTimePST': {
                         '$dateToString': {
@@ -151,77 +154,35 @@ const getOrgReport = async(detail) => {
                         }
                     }
                 }
-            }, {
+            }, 
+           
+            {
                 '$match': {
                     'scriptResponseTimePST': datePicker ? datePicker : { $exists: true },
                 }
-            }, {
+            }, 
+            
+            {
                 '$group': {
                     '_id': '$outReachReport.orgID',
                     'outReachEntry': {
                         '$push': '$outReachReport'
                     }
                 }
-            }, {
+            }, 
+            
+            {
                 '$project': {
                     VERYPOSITIVE,
                     POSITIVE,
                     NEUTRAL,
                     NEGATIVE,
                     VERYNEGATIVE,
-                    'IMP': {
-                        '$size': {
-                            '$filter': {
-                                'input': '$outReachEntry.nonResponse',
-                                'cond': {
-                                    '$and': [
-                                        {'$eq': ['$$this.nonResponseType', 'IMP']}
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    'INVALIDPHONE': {
-                        '$size': {
-                            '$filter': {
-                                'input': '$outReachEntry.nonResponse',
-                                'cond': {
-                                    '$and': [
-                                        {'$eq': ['$$this.nonResponseType', 'INVALIDPHONE']}
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    'DNC': {
-                        '$size': {
-                            '$filter': {
-                                'input': '$outReachEntry.nonResponse',
-                                'cond': {
-                                    '$and': [
-                                        {'$eq': ['$$this.nonResponseType', 'DNC']}
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    'NONRESPONSE': {
-                        '$size': {
-                            '$filter': {
-                                'input': '$outReachEntry.nonResponse',
-                                'cond': {
-                                    '$and': [
-                                        {'$eq': ['$$this.nonResponseType', 'NONRESPONSE']}
-                                    ]
-                                }
-                            }
-                        }
-                    }
+                
                 }
             }
         ];
 
-        //console.log(JSON.stringify(agg, null, 2))
         return await OutreachReport.aggregate(agg).allowDiskUse(true);
 
     } catch(e){

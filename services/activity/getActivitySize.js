@@ -7,18 +7,38 @@ const getActivitySize = async(detail) => {
     try { 
         var activity = await Activity.findById(detail.activityID)
 
+        var totalResidents = 0
+
         if(activity.activityType ==='Phonebank'){
-            var pbhhrecords = await phonebankHouseHoldRecord.countDocuments({activityID: detail.activityID})
+            var pbhhrecords = await phonebankHouseHoldRecord.count({activityID: detail.activityID})
+
+            /*
+            for(var i = 0; i < pbhhrecords.length; i++){
+                totalResidents = totalResidents + pbhhrecords[i].houseHold.residents.length
+            }*/
+
             return {totalHouseHolds: pbhhrecords}
         }
 
         if(activity.activityType ==='Texting'){
-            var tbhhrecords = await textbankHouseHoldRecord.countDocuments({activityID: detail.activityID})
+            var tbhhrecords = await textbankHouseHoldRecord.count({activityID: detail.activityID})
+
+            /*
+            for(var i = 0; i < tbhhrecords.length; i++){
+                totalResidents = totalResidents + tbhhrecords[i].houseHold.residents.length
+            }*/
+
             return {totalHouseHolds: tbhhrecords}
         }
 
         if(activity.activityType ==='Canvass'){
-            var chhrecords = await canvassHouseHoldRecord.countDocuments({activityID: detail.activityID})
+            var chhrecords = await canvassHouseHoldRecord.count({activityID: detail.activityID})
+
+            /*
+            for(var i = 0; i < chhrecords.length; i++){
+                totalResidents = totalResidents + chhrecords[i].houseHold.residents.length
+            }*/
+
             return {totalHouseHolds: chhrecords}
         }
 

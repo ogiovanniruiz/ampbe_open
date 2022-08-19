@@ -34,6 +34,7 @@ const getEstimate = async(estimate) => {
 
         var boundary = await Districts.find({'properties.identifier': {$in: campaign.boundaryIDs}})
         var districtTypeParam = "districts." + boundary[0].properties.districtType.toLowerCase() + "ID";
+        console.log(districtTypeParam )
         for(var i = 0; i < boundary.length; i++){
             var id = boundary[i].properties.identifier
             districtTypeSet.push(id);

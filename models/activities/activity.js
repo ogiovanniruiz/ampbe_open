@@ -18,6 +18,7 @@ var ActivitySchema = new Schema(
     textMetaData: TextMetaData.schema, 
     passes: {type: Number, default: 0},
     idByHousehold: {type: String, enum :[ "HOUSEHOLD", "INDIVIDUAL" , "MEMBERSHIP"]},
+    hhReady: {type: Boolean, default: false}
   }
 );
 
