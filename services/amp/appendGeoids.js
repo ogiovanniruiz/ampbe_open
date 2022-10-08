@@ -6,9 +6,9 @@ const appendGeoids = async() => {
     try { 
         console.log("Starting to Append Geoids...")
 
-        var batch = false
+        var batch = true
 
-        var precinctMatch = true
+        var precinctMatch = false
 
         /*
         if(!batch){
@@ -90,7 +90,7 @@ const appendGeoids = async() => {
 
     if(precinctMatch){
 
-        var precincts = await Precinct.find({'properties.county.name': "SOLANO"});
+        var precincts = await Precinct.find({'properties.county.name': "RIVERSIDE"});
 
         for(var i = 0; i < precincts.length; i++){
 
