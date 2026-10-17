@@ -1,0 +1,7 @@
+node_modules
+package-lock.json
+service_accounts
+.env.development
+deploy
+.DS_Store
+scripts
